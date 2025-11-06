@@ -14,10 +14,11 @@ export default function Contact() {
       </p>
 
       <a
-        href="mailto:hello@hoplink.app"
+        href="mailto:hotlinkcarpooling@gmail.com"
         className="mt-3 rounded-xl border px-6 py-2.5 text-indigo-600 border-indigo-300 hover:bg-indigo-50 transition font-medium"
       >
-        hello@hoplink.app
+        hotlinkcarpooling@gmail.com
+    
       </a>
 
       <p className="mt-6 text-sm text-gray-400">
