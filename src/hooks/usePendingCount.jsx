@@ -1,4 +1,3 @@
-// src/hooks/usePendingCount.js
 import { useEffect, useState, useCallback } from "react";
 import { countPendingRequests, subscribeToDB } from "../lib/db";
 import { useAuth } from "../context/AuthContext";

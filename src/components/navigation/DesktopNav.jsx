@@ -1,4 +1,3 @@
-// src/components/navigation/DesktopNav.jsx
 import { useEffect, useRef, useState, useMemo } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { MoreHorizontal } from "lucide-react";
@@ -94,9 +93,6 @@ export default function DesktopNav() {
         primary: [
           { to: "/", label: "Home", end: true },
           { to: "/explore", label: "Explore" },
-          { to: "/rides", label: "Rides" },
-        ],
-        secondary: [
           { to: "/about", label: "About" },
           { to: "/contact", label: "Contact" },
         ],

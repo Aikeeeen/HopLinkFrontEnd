@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
 import {
-  Menu, X, Home, Info, Mail, Car, History, Inbox, Settings, LifeBuoy, ListChecks, ClipboardList
+  Menu, X, Home, Info, Mail, Car, History, Inbox, Settings, LifeBuoy,
+  ListChecks, ClipboardList, Map, UserCircle
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import usePendingCount from "../../hooks/usePendingCount";
@@ -13,6 +14,74 @@ const navLinkClass = ({ isActive }) =>
       ? "bg-indigo-600 text-white"
       : "text-gray-700 hover:bg-indigo-50 hover:text-indigo-700",
   ].join(" ");
+
+/* ---------- Tiny helpers for the user header (no hooks) ---------- */
+function initialsFrom(nameOrEmail = "") {
+  const src = String(nameOrEmail).trim();
+  if (!src) return "U";
+  if (src.includes("@")) return src[0]?.toUpperCase() || "U";
+  const parts = src.split(/\s+/).filter(Boolean);
+  if (parts.length === 1) return parts[0][0]?.toUpperCase() || "U";
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+function getMockRating(seedInput) {
+  const s = String(seedInput || "");
+  // make a stable-ish rating per user
+  const seed = s.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
+  const rating = (4 + (seed % 11) / 10).toFixed(1); // 4.0..5.0
+  const reviews = 12 + (seed % 88); // 12..99
+  return { rating, reviews };
+}
+
+function UserHeader({ user }) {
+  const hasUser = !!user;
+  const name = user?.name || user?.email || "Guest";
+  const role = user?.role || "guest";
+  const initials = initialsFrom(user?.name || user?.email);
+  const showRating = hasUser && role !== "guest";
+  const { rating, reviews } = showRating
+    ? getMockRating(user?.email || user?.name || "")
+    : { rating: null, reviews: null };
+
+  const roleClasses =
+    role === "driver"
+      ? "bg-emerald-100 text-emerald-700"
+      : role === "passenger"
+      ? "bg-sky-100 text-sky-700"
+      : "bg-slate-100 text-slate-600";
+
+  return (
+    <div className="px-4 py-3 border-b bg-linear-to-r from-white to-indigo-50">
+      <div className="flex items-center gap-3">
+        {/* Avatar */}
+        <div className="relative h-10 w-10 rounded-full bg-indigo-600 text-white grid place-items-center font-semibold">
+          {initials}
+          <span className="absolute inset-0 rounded-full ring-2 ring-white/70" />
+        </div>
+
+        {/* Name + role + optional rating */}
+        <div className="min-w-0">
+          <div className="flex items-center gap-2">
+            <p className="truncate font-semibold text-slate-900">{name}</p>
+            <span className={`text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded-full ${roleClasses}`}>
+              {role}
+            </span>
+          </div>
+
+          {showRating ? (
+            <p className="text-xs text-slate-600 mt-0.5">
+              <span className="font-medium text-amber-600">{rating} ★</span>{" "}
+              <span className="text-slate-500">({reviews})</span>
+            </p>
+          ) : (
+            <p className="text-xs text-slate-500 mt-0.5 italic">Not signed in</p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function MobileNav() {
   const { user } = useAuth();
@@ -27,7 +96,7 @@ export default function MobileNav() {
         { to: "/", label: "Home", end: true, Icon: Home },
         { to: "/about", label: "About", Icon: Info },
         { to: "/contact", label: "Contact", Icon: Mail },
-        { to: "/rides", label: "Rides", Icon: Car },
+        { to: "/explore", label: "Explore", Icon: Map },
       ];
     }
     if (user.role === "driver") {
@@ -42,6 +111,7 @@ export default function MobileNav() {
         { to: "/support", label: "Support", Icon: LifeBuoy },
       ];
     }
+    // passenger
     return [
       { to: "/", label: "Home", end: true, Icon: Home },
       { to: "/history", label: "History", Icon: History },
@@ -92,7 +162,7 @@ export default function MobileNav() {
         aria-modal="true"
         aria-label="Mobile navigation"
       >
-        {/* Header */}
+        {/* Header row */}
         <div className="flex items-center justify-between px-4 py-4 shadow-sm">
           <h2 className="text-lg font-semibold">
             HopLink<span className="text-indigo-600">Carpooling</span>
@@ -106,6 +176,9 @@ export default function MobileNav() {
           </button>
         </div>
 
+        {/* User header (no rating for guests) */}
+        <UserHeader user={user} />
+
         {/* Nav links */}
         <nav className="px-4 py-4 space-y-2">
           {links.map(({ to, label, end, Icon, showBadge }) => (
@@ -116,7 +189,7 @@ export default function MobileNav() {
               className={navLinkClass}
               onClick={() => setOpen(false)}
             >
-              {React.createElement(Icon, { className: "h-5 w-5 shrink-0" })}
+              {React.createElement(Icon || UserCircle, { className: "h-5 w-5 shrink-0" })}
               <span>{label}</span>
 
               {showBadge && pending > 0 && (

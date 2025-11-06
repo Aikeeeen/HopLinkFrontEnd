@@ -26,7 +26,7 @@ export default function BrowseRideCard({ ride, canJoin, joinedStatus, onJoin, on
       ? "bg-red-100 text-red-700"
       : remaining <= 3
       ? "bg-amber-100 text-amber-700"
-      : "bg-slate-100 text-slate-700";
+      : "bg-green-100 text-green-700";
 
   const seatLabel = remaining <= 0 ? "Full" : `${remaining} left`;
 

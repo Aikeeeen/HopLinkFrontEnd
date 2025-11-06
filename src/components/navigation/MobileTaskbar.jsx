@@ -1,4 +1,3 @@
-// src/components/navigation/MobileTaskbar.jsx
 import { NavLink, useNavigate } from "react-router-dom";
 import { Home, ClipboardList, Inbox, Plus, Map } from "lucide-react";
 import usePendingCount from "../../hooks/usePendingCount";
