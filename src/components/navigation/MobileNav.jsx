@@ -21,41 +21,38 @@ export default function MobileNav() {
   const [open, setOpen] = useState(false);
   const sidebarRef = useRef(null);
 
-  // Prevent background scrolling when sidebar is open
+  // lock scroll when open
   useEffect(() => {
-    if (open) {
-      const prev = document.body.style.overflow;
-      document.body.style.overflow = "hidden";
-      return () => (document.body.style.overflow = prev);
-    }
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => (document.body.style.overflow = prev);
   }, [open]);
 
-  // Close sidebar when clicking outside
+  // click outside to close
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+    if (!open) return;
+    const handle = (e) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(e.target)) {
         setOpen(false);
       }
     };
-
-    if (open) document.addEventListener("mousedown", handleClickOutside);
-    else document.removeEventListener("mousedown", handleClickOutside);
-
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("mousedown", handle);
+    return () => document.removeEventListener("mousedown", handle);
   }, [open]);
 
   return (
     <>
-      {/* Hamburger / Close button */}
+      {/* Hamburger / Close */}
       <button
-        onClick={() => setOpen((prev) => !prev)} // toggle open/close
+        onClick={() => setOpen((v) => !v)}
         className="md:hidden inline-flex items-center justify-center rounded-xl border px-3 py-2 text-gray-700 hover:bg-gray-100"
         aria-label={open ? "Close menu" : "Open menu"}
       >
         {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
       </button>
 
-      {/* Sidebar */}
+      {/* Sidebar (no overlay) */}
       <aside
         ref={sidebarRef}
         className={`fixed left-0 top-0 z-50 h-dvh w-72 transform bg-white shadow-lg transition-transform duration-300 md:hidden ${
@@ -89,8 +86,8 @@ export default function MobileNav() {
               className={navLinkClass}
               onClick={() => setOpen(false)}
             >
-              {React.createElement(Icon, { className: "h-5 w-5" })}
-              {label}
+              {React.createElement(Icon, { className: "h-5 w-5 shrink-0" })}
+              <span>{label}</span>
             </NavLink>
           ))}
         </nav>
