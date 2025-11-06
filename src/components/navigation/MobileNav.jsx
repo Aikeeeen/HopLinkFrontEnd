@@ -1,66 +1,100 @@
-import { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
+import { Menu, X, Home, Info, Mail, User } from "lucide-react";
 
 const links = [
-  { to: "/", label: "Home", end: true },
-  { to: "/about", label: "About" },
-  { to: "/contact", label: "Contact" },
+  { to: "/", label: "Home", end: true, Icon: Home },
+  { to: "/about", label: "About", Icon: Info },
+  { to: "/contact", label: "Contact", Icon: Mail },
+  { to: "/userview", label: "Userview", Icon: User },
 ];
 
 const navLinkClass = ({ isActive }) =>
   [
-    "block px-3 py-2 rounded-xl text-sm font-medium transition",
-    isActive ? "bg-indigo-600 text-white" : "text-gray-700 hover:bg-gray-100",
+    "flex items-center gap-3 rounded-lg px-4 py-2 text-base font-medium transition",
+    isActive
+      ? "bg-indigo-600 text-white"
+      : "text-gray-700 hover:bg-indigo-50 hover:text-indigo-700",
   ].join(" ");
 
 export default function MobileNav() {
   const [open, setOpen] = useState(false);
+  const sidebarRef = useRef(null);
+
+  // Prevent background scrolling when sidebar is open
+  useEffect(() => {
+    if (open) {
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => (document.body.style.overflow = prev);
+    }
+  }, [open]);
+
+  // Close sidebar when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+        setOpen(false);
+      }
+    };
+
+    if (open) document.addEventListener("mousedown", handleClickOutside);
+    else document.removeEventListener("mousedown", handleClickOutside);
+
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [open]);
 
   return (
     <>
-      {/* Toggle */}
+      {/* Hamburger / Close button */}
       <button
+        onClick={() => setOpen((prev) => !prev)} // toggle open/close
         className="md:hidden inline-flex items-center justify-center rounded-xl border px-3 py-2 text-gray-700 hover:bg-gray-100"
-        onClick={() => setOpen((v) => !v)}
-        aria-expanded={open}
-        aria-controls="mobile-menu"
-        aria-label="Toggle navigation"
+        aria-label={open ? "Close menu" : "Open menu"}
       >
-        <span className="sr-only">Open main menu</span>
-        <svg
-          className={`h-5 w-5 ${open ? "hidden" : "block"}`}
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-        >
-          <path strokeWidth="2" strokeLinecap="round" d="M4 7h16M4 12h16M4 17h16" />
-        </svg>
-        <svg
-          className={`h-5 w-5 ${open ? "block" : "hidden"}`}
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-        >
-          <path strokeWidth="2" strokeLinecap="round" d="M6 18L18 6M6 6l12 12" />
-        </svg>
+        {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
       </button>
 
-      {/* Menu */}
-      <div id="mobile-menu" className={`md:hidden ${open ? "block" : "hidden"} border-t bg-white`}>
-        <nav className="mx-auto max-w-7xl px-4 py-2 sm:px-6 lg:px-8 space-y-1">
-          {links.map((l) => (
+      {/* Sidebar */}
+      <aside
+        ref={sidebarRef}
+        className={`fixed left-0 top-0 z-50 h-dvh w-72 transform bg-white shadow-lg transition-transform duration-300 md:hidden ${
+          open ? "translate-x-0" : "-translate-x-full"
+        }`}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Mobile navigation"
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between px-4 py-4 shadow-sm">
+          <h2 className="text-lg font-semibold">
+            HopLink<span className="text-indigo-600">Carpooling</span>
+          </h2>
+          <button
+            onClick={() => setOpen(false)}
+            className="rounded-lg p-2 text-gray-600 hover:bg-gray-100"
+            aria-label="Close menu"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+
+        {/* Nav links */}
+        <nav className="px-4 py-4 space-y-2">
+          {links.map(({ to, label, end, Icon }) => (
             <NavLink
-              key={l.to}
-              to={l.to}
-              end={l.end}
+              key={to}
+              to={to}
+              end={end}
               className={navLinkClass}
               onClick={() => setOpen(false)}
             >
-              {l.label}
+              {React.createElement(Icon, { className: "h-5 w-5" })}
+              {label}
             </NavLink>
           ))}
         </nav>
-      </div>
+      </aside>
     </>
   );
 }
