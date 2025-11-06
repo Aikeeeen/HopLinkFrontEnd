@@ -4,6 +4,7 @@ const links = [
   { to: "/", label: "Home", end: true },
   { to: "/about", label: "About" },
   { to: "/contact", label: "Contact" },
+  { to: "/userview", label: "Userview" },
 ];
 
 const navLinkClass = ({ isActive }) =>
