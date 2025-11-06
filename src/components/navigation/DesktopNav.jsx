@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 const links = [
   { to: "/", label: "Home", end: true },
@@ -14,6 +15,9 @@ const navLinkClass = ({ isActive }) =>
   ].join(" ");
 
 export default function DesktopNav() {
+  const { user } = useAuth();
+  if (!user) return null;
+
   return (
     <nav className="hidden md:flex items-center gap-2">
       {links.map((l) => (
