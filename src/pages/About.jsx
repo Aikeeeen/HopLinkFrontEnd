@@ -8,7 +8,7 @@ export default function About() {
       <p className="mt-4 text-lg text-gray-600 max-w-2xl">
         HopLink is a simple, friendly carpooling platform designed to help people
         share rides, reduce travel costs, and build community along the way.
-        We're focused on safety, simplicity, and real-world convenience — making
+        We're focused on safety, simplicity, and real-world convenience. Making
         carpooling easier for everyday commuters and weekend travelers alike.
       </p>
 
