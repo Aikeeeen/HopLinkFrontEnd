@@ -8,8 +8,12 @@ export default function AuthButtons() {
   if (!user) {
     return (
       <div className="flex items-center gap-3">
-        <Link to="/login" className="rounded-xl border px-4 py-2 text-sm hover:bg-gray-100">Login</Link>
-        <Link to="/register" className="rounded-xl bg-indigo-600 px-4 py-2 text-sm text-white hover:bg-indigo-700">Register</Link>
+        <Link to="/demo/login" className="hl-btn-secondary">
+          Login
+        </Link>
+        <Link to="/demo/register" className="hl-btn-primary">
+          Register
+        </Link>
       </div>
     );
   }
@@ -17,8 +21,11 @@ export default function AuthButtons() {
   return (
     <div className="flex items-center gap-3">
       <button
-        onClick={() => { logout(); navigate("/", { replace: true }); }}
-        className="rounded-xl border px-4 py-2 text-sm hover:bg-gray-100"
+        onClick={() => {
+          logout();
+          navigate("/demo", { replace: true });
+        }}
+        className="hl-btn-secondary"
       >
         Logout
       </button>

@@ -10,15 +10,15 @@ export default function AuthButtonsMobile() {
     return (
       <div className="flex items-center gap-2">
         <Link
-          to="/login"
+          to="/demo/login"
           aria-label="Login"
-          className="p-2 rounded-lg border text-gray-700 hover:bg-gray-100"
+          className="p-2 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-100 dark:hover:bg-slate-800"
           title="Login"
         >
           <LogIn className="h-5 w-5" />
         </Link>
         <Link
-          to="/register"
+          to="/demo/register"
           aria-label="Register"
           className="p-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700"
           title="Register"
@@ -36,9 +36,9 @@ export default function AuthButtonsMobile() {
         title="Logout"
         onClick={() => {
           logout();
-          navigate("/", { replace: true });
+          navigate("/demo", { replace: true });
         }}
-        className="p-2 rounded-lg border text-gray-700 hover:bg-gray-100"
+        className="p-2 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-100 dark:hover:bg-slate-800"
       >
         <LogOut className="h-5 w-5" />
       </button>

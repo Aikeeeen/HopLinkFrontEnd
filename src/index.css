@@ -1,1 +1,174 @@
 @import "tailwindcss";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* Shared HopLink design tokens / utilities */
+@layer utilities {
+  /* Page background + base text */
+  .hl-page {
+    @apply bg-gray-50 text-gray-900
+           dark:bg-slate-950 dark:text-slate-50;
+  }
+
+  /* Generic card */
+  .hl-card {
+    @apply rounded-2xl border border-slate-200 bg-white shadow-sm
+           dark:border-slate-700 dark:bg-slate-900;
+  }
+
+  /* Empty-state box */
+  .hl-empty {
+    @apply rounded-xl border border-dashed border-slate-300 p-6
+           text-center text-sm text-slate-500
+           dark:border-slate-700 dark:text-slate-400;
+  }
+
+  /* Typography helpers */
+  .hl-heading {
+    @apply text-slate-900 dark:text-slate-50;
+  }
+
+  .hl-body {
+    @apply text-slate-700 dark:text-slate-200;
+  }
+
+  .hl-muted {
+    @apply text-slate-500 dark:text-slate-400;
+  }
+
+  /* Basic input */
+  .hl-input {
+    @apply w-full rounded-xl border border-slate-200 bg-white px-3 py-2
+           text-sm text-slate-900 outline-none
+           focus:ring-2 focus:ring-indigo-500
+           dark:border-slate-700 dark:bg-slate-900 dark:text-slate-50;
+  }
+
+  /* Input with "Show/Hide" button (password) */
+  .hl-input-with-btn {
+    @apply w-full rounded-xl border border-slate-200 bg-white px-3 py-2
+           text-sm text-slate-900 outline-none pr-16
+           focus:ring-2 focus:ring-indigo-500
+           dark:border-slate-700 dark:bg-slate-900 dark:text-slate-50;
+  }
+
+  .hl-toggle-btn {
+    @apply absolute inset-y-0 right-2 my-auto h-7 px-2 text-xs
+           rounded-lg border border-slate-300 bg-white text-slate-600
+           hover:bg-slate-100
+           dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200
+           dark:hover:bg-slate-700;
+  }
+
+  .hl-label {
+    @apply mb-1 block text-sm font-medium
+           text-slate-700 dark:text-slate-200;
+  }
+
+  /* Primary & secondary buttons */
+  .hl-btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl
+           bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white
+           hover:bg-indigo-700 transition;
+  }
+
+  .hl-btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl
+           border border-slate-300 px-5 py-2.5 text-sm font-medium text-slate-700
+           hover:bg-slate-100
+           dark:border-slate-600 dark:text-slate-100 dark:hover:bg-slate-800;
+  }
+
+  /* Pills / badges */
+  .hl-badge-pill {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1
+           text-[11px] font-medium;
+  }
+
+  /* Auth layout helpers */
+  .hl-auth-card {
+    @apply rounded-2xl border border-slate-200 bg-white shadow-sm
+           dark:border-slate-700 dark:bg-slate-900
+           max-w-md w-full mx-auto p-6 sm:p-8;
+  }
+
+  .hl-auth-warning {
+    @apply mt-3 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2
+           text-xs text-amber-700
+           dark:bg-amber-500/20 dark:text-amber-200;
+  }
+
+  .hl-auth-footer {
+    @apply mt-6 text-center text-sm
+           text-slate-500 dark:text-slate-400;
+  }
+
+  .hl-link-muted {
+    @apply font-medium text-indigo-600 hover:text-indigo-700 hover:underline
+           dark:text-indigo-300 dark:hover:text-indigo-200;
+  }
+
+  .hl-error {
+    @apply rounded-xl border border-red-300 bg-red-50 px-3 py-2
+           text-xs text-red-700
+           dark:border-red-500 dark:bg-red-950/40 dark:text-red-200;
+  }
+}
+
+  /* Soft / variant cards for marketing sections */
+  .hl-card-soft {
+    @apply rounded-3xl border border-slate-200 bg-white shadow-sm
+           dark:border-slate-800 dark:bg-slate-950/60;
+  }
+
+  .hl-card-stat {
+    @apply rounded-2xl border border-slate-200 bg-white shadow-sm
+           dark:border-slate-800 dark:bg-slate-900/60;
+  }
+
+  /* Hero / marketing text helpers */
+  .hl-hero-kicker {
+    @apply inline-flex items-center gap-2 rounded-full border border-emerald-500/20
+           bg-emerald-500/10 px-2.5 py-1 text-[11px] font-medium tracking-wide
+           uppercase text-emerald-700
+           dark:text-emerald-200;
+  }
+
+  .hl-hero-strip {
+    @apply rounded-2xl border border-emerald-500/20 bg-linear-to-r
+           from-emerald-500/10 via-emerald-500/5 to-slate-50
+           dark:to-slate-900;
+  }
+
+  .hl-section-divider {
+    @apply border-y border-slate-200 dark:border-slate-800;
+  }
+
+    /* Bottom navigation (mobile taskbar) */
+  .hl-bottom-nav {
+  @apply border-t bg-white/90 backdrop-blur
+         dark:bg-slate-950/90 dark:border-slate-800;
+}
+
+.hl-bottom-nav-link {
+  @apply relative flex flex-col items-center justify-center gap-1
+         text-xs font-medium
+         text-slate-600 hover:text-indigo-600
+         dark:text-slate-200 dark:hover:text-indigo-300;
+}
+
+.hl-bottom-nav-link-active {
+  @apply text-indigo-600 dark:text-indigo-300;
+}
+
+.hl-bottom-nav-fab {
+  @apply
+    h-12 w-12
+    rounded-full
+    bg-indigo-600 text-white
+    shadow-lg shadow-indigo-600/25
+    inline-flex items-center justify-center
+    active:scale-95 transition;
+}
+  
+

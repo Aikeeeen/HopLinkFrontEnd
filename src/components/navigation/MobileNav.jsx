@@ -1,21 +1,32 @@
 import React, { useEffect, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
 import {
-  Menu, X, Home, Info, Mail, Car, History, Inbox, Settings, LifeBuoy,
-  ListChecks, ClipboardList, Map, UserCircle
+  Menu,
+  X,
+  Home,
+  Info,
+  Mail,
+  Car,
+  History,
+  Inbox,
+  Settings,
+  LifeBuoy,
+  ListChecks,
+  ClipboardList,
+  Map,
+  UserCircle,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import usePendingCount from "../../hooks/usePendingCount";
 
 const navLinkClass = ({ isActive }) =>
   [
-    "relative flex items-center gap-3 rounded-lg px-4 py-2 text-base font-medium transition",
+    "relative flex items-center gap-3 rounded-lg px-4 py-2 text-sm font-medium transition",
     isActive
       ? "bg-indigo-600 text-white"
-      : "text-gray-700 hover:bg-indigo-50 hover:text-indigo-700",
+      : "hl-body hover:bg-indigo-50 hover:text-indigo-700 dark:hover:bg-slate-800 dark:hover:text-slate-50",
   ].join(" ");
 
-/* ---------- Tiny helpers for the user header (no hooks) ---------- */
 function initialsFrom(nameOrEmail = "") {
   const src = String(nameOrEmail).trim();
   if (!src) return "U";
@@ -27,10 +38,9 @@ function initialsFrom(nameOrEmail = "") {
 
 function getMockRating(seedInput) {
   const s = String(seedInput || "");
-  // make a stable-ish rating per user
   const seed = s.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
-  const rating = (4 + (seed % 11) / 10).toFixed(1); // 4.0..5.0
-  const reviews = 12 + (seed % 88); // 12..99
+  const rating = (4 + (seed % 11) / 10).toFixed(1);
+  const reviews = 12 + (seed % 88);
   return { rating, reviews };
 }
 
@@ -46,36 +56,36 @@ function UserHeader({ user }) {
 
   const roleClasses =
     role === "driver"
-      ? "bg-emerald-100 text-emerald-700"
+      ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-200"
       : role === "passenger"
-      ? "bg-sky-100 text-sky-700"
-      : "bg-slate-100 text-slate-600";
+      ? "bg-sky-100 text-sky-700 dark:bg-sky-500/20 dark:text-sky-200"
+      : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-200";
 
   return (
-    <div className="px-4 py-3 border-b bg-linear-to-r from-white to-indigo-50">
+    <div className="px-4 py-3 border-b bg-linear-to-r from-white to-indigo-50 dark:from-slate-950 dark:to-slate-900">
       <div className="flex items-center gap-3">
-        {/* Avatar */}
         <div className="relative h-10 w-10 rounded-full bg-indigo-600 text-white grid place-items-center font-semibold">
           {initials}
           <span className="absolute inset-0 rounded-full ring-2 ring-white/70" />
         </div>
 
-        {/* Name + role + optional rating */}
         <div className="min-w-0">
           <div className="flex items-center gap-2">
-            <p className="truncate font-semibold text-slate-900">{name}</p>
-            <span className={`text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded-full ${roleClasses}`}>
+            <p className="truncate font-semibold hl-heading text-sm">{name}</p>
+            <span
+              className={`hl-badge-pill text-[10px] uppercase tracking-wide ${roleClasses}`}
+            >
               {role}
             </span>
           </div>
 
           {showRating ? (
-            <p className="text-xs text-slate-600 mt-0.5">
+            <p className="text-xs mt-0.5 hl-body">
               <span className="font-medium text-amber-600">{rating} ★</span>{" "}
-              <span className="text-slate-500">({reviews})</span>
+              <span className="hl-muted">({reviews})</span>
             </p>
           ) : (
-            <p className="text-xs text-slate-500 mt-0.5 italic">Not signed in</p>
+            <p className="text-xs mt-0.5 italic hl-muted">Not signed in</p>
           )}
         </div>
       </div>
@@ -89,39 +99,42 @@ export default function MobileNav() {
   const [open, setOpen] = useState(false);
   const sidebarRef = useRef(null);
 
-  // Build links based on auth/role
   const links = React.useMemo(() => {
     if (!user) {
       return [
-        { to: "/", label: "Home", end: true, Icon: Home },
-        { to: "/about", label: "About", Icon: Info },
-        { to: "/contact", label: "Contact", Icon: Mail },
-        { to: "/explore", label: "Explore", Icon: Map },
+        { to: "/demo", label: "Home", end: true, Icon: Home },
+        { to: "/demo/about", label: "About", Icon: Info },
+        { to: "/demo/contact", label: "Contact", Icon: Mail },
+        { to: "/demo/explore", label: "Explore", Icon: Map },
       ];
     }
     if (user.role === "driver") {
       return [
-        { to: "/", label: "Home", end: true, Icon: Home },
-        { to: "/history", label: "History", Icon: History },
-        { to: "/inbox", label: "Inbox", Icon: Inbox },
-        { to: "/requests", label: "Requests", Icon: ClipboardList, showBadge: true },
-        { to: "/my-rides", label: "My Rides", Icon: ListChecks },
-        { to: "/my-car", label: "My Car", Icon: Car },
-        { to: "/settings", label: "Settings", Icon: Settings },
-        { to: "/support", label: "Support", Icon: LifeBuoy },
+        { to: "/demo", label: "Home", end: true, Icon: Home },
+        { to: "/demo/history", label: "History", Icon: History },
+        { to: "/demo/inbox", label: "Inbox", Icon: Inbox },
+        {
+          to: "/demo/requests",
+          label: "Requests",
+          Icon: ClipboardList,
+          showBadge: true,
+        },
+        { to: "/demo/my-rides", label: "My Rides", Icon: ListChecks },
+        { to: "/demo/my-car", label: "My Car", Icon: Car },
+        { to: "/demo/settings", label: "Settings", Icon: Settings },
+        { to: "/demo/support", label: "Support", Icon: LifeBuoy },
       ];
     }
     // passenger
     return [
-      { to: "/", label: "Home", end: true, Icon: Home },
-      { to: "/history", label: "History", Icon: History },
-      { to: "/inbox", label: "Inbox", Icon: Inbox },
-      { to: "/settings", label: "Settings", Icon: Settings },
-      { to: "/support", label: "Support", Icon: LifeBuoy },
+      { to: "/demo", label: "Home", end: true, Icon: Home },
+      { to: "/demo/history", label: "History", Icon: History },
+      { to: "/demo/inbox", label: "Inbox", Icon: Inbox },
+      { to: "/demo/settings", label: "Settings", Icon: Settings },
+      { to: "/demo/support", label: "Support", Icon: LifeBuoy },
     ];
   }, [user]);
 
-  // lock scroll when open
   useEffect(() => {
     if (!open) return;
     const prev = document.body.style.overflow;
@@ -129,7 +142,6 @@ export default function MobileNav() {
     return () => (document.body.style.overflow = prev);
   }, [open]);
 
-  // click outside to close
   useEffect(() => {
     if (!open) return;
     const handle = (e) => {
@@ -143,43 +155,38 @@ export default function MobileNav() {
 
   return (
     <>
-      {/* Hamburger / Close */}
       <button
         onClick={() => setOpen((v) => !v)}
-        className="md:hidden inline-flex items-center justify-center rounded-xl border px-3 py-2 text-gray-700 hover:bg-gray-100"
+        className="md:hidden inline-flex items-center justify-center rounded-xl border px-3 py-2 text-gray-700 hover:bg-gray-100 dark:text-slate-200 dark:border-slate-700 dark:hover:bg-slate-800"
         aria-label={open ? "Close menu" : "Open menu"}
       >
         {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
       </button>
 
-      {/* Sidebar */}
       <aside
         ref={sidebarRef}
-        className={`fixed left-0 top-0 z-50 h-dvh w-72 transform bg-white shadow-lg transition-transform duration-300 md:hidden ${
+        className={`fixed left-0 top-0 z-50 h-dvh w-72 transform bg-white shadow-lg transition-transform duration-300 md:hidden dark:bg-slate-950 dark:text-slate-50 ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}
         role="dialog"
         aria-modal="true"
         aria-label="Mobile navigation"
       >
-        {/* Header row */}
-        <div className="flex items-center justify-between px-4 py-4 shadow-sm">
-          <h2 className="text-lg font-semibold">
+        <div className="flex items-center justify-between px-4 py-4 shadow-sm bg-white dark:bg-slate-950">
+          <h2 className="text-lg font-semibold hl-heading">
             HopLink<span className="text-indigo-600">Carpooling</span>
           </h2>
           <button
             onClick={() => setOpen(false)}
-            className="rounded-lg p-2 text-gray-600 hover:bg-gray-100"
+            className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 dark:text-slate-300 dark:hover:bg-slate-800"
             aria-label="Close menu"
           >
             <X className="h-5 w-5" />
           </button>
         </div>
 
-        {/* User header (no rating for guests) */}
         <UserHeader user={user} />
 
-        {/* Nav links */}
         <nav className="px-4 py-4 space-y-2">
           {links.map(({ to, label, end, Icon, showBadge }) => (
             <NavLink
@@ -189,7 +196,9 @@ export default function MobileNav() {
               className={navLinkClass}
               onClick={() => setOpen(false)}
             >
-              {React.createElement(Icon || UserCircle, { className: "h-5 w-5 shrink-0" })}
+              {React.createElement(Icon || UserCircle, {
+                className: "h-5 w-5 shrink-0",
+              })}
               <span>{label}</span>
 
               {showBadge && pending > 0 && (

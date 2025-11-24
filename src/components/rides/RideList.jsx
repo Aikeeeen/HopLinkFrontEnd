@@ -33,7 +33,9 @@ export default function RideList({ refreshKey = 0, onEdit }) {
   return (
     <div className="grid gap-4">
       {rides.length === 0 ? (
-        <p className="text-sm text-slate-600">No rides yet. Create one above.</p>
+        <p className="text-sm hl-muted">
+          No rides yet. Create one above.
+        </p>
       ) : (
         rides.map((r) => (
           <RideCard

@@ -1,27 +1,28 @@
 import { MapPin, Clock, Check, X, UserMinus, Users } from "lucide-react";
 
 export default function RideRequestGroup({
-  group, // { rideId, title, origin, destination, date, departTime, pending[], accepted[] }
+  group,
   onAccept,
   onDecline,
   onRemove,
 }) {
   return (
-    <div className="rounded-2xl border bg-white p-4 shadow-sm">
+    <div className="hl-card p-4">
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h3 className="text-base font-semibold text-slate-800 flex items-center gap-2">
+          <h3 className="text-base font-semibold hl-heading flex items-center gap-2">
             <Users className="h-4 w-4 text-indigo-600" />
             {group.title}
           </h3>
-          <p className="mt-1 text-sm text-gray-600 flex items-center gap-2">
-            <MapPin className="h-4 w-4 text-gray-400" />
+          <p className="mt-1 text-sm hl-body flex items-center gap-2">
+            <MapPin className="h-4 w-4 text-gray-400 dark:text-slate-400" />
             <span className="font-medium">{group.origin}</span> →{" "}
             <span className="font-medium">{group.destination}</span>
           </p>
-          <p className="text-sm text-gray-500 flex items-center gap-1">
-            <Clock className="h-4 w-4 text-gray-400" /> {group.date}
+          <p className="text-sm hl-muted flex items-center gap-1">
+            <Clock className="h-4 w-4 text-gray-400 dark:text-slate-400" />{" "}
+            {group.date}
             {group.departTime && ` • ${group.departTime}`}
           </p>
         </div>
@@ -29,9 +30,9 @@ export default function RideRequestGroup({
 
       {/* Pending */}
       <div className="mt-4">
-        <h4 className="text-sm font-semibold text-slate-700 mb-2">Pending</h4>
+        <h4 className="text-sm font-semibold hl-body mb-2">Pending</h4>
         {group.pending.length === 0 ? (
-          <div className="rounded-lg border border-dashed border-gray-300 p-3 text-xs text-gray-500">
+          <div className="hl-empty text-left">
             No pending requests.
           </div>
         ) : (
@@ -39,14 +40,15 @@ export default function RideRequestGroup({
             {group.pending.map((p) => (
               <div
                 key={`p-${group.rideId}-${p.userId}`}
-                className="flex items-center justify-between gap-3 rounded-lg border p-3"
+                className="rounded-lg border border-slate-200 dark:border-slate-700 p-3 flex items-center justify-between gap-3"
               >
                 <div className="min-w-0">
-                  <div className="font-medium text-slate-800 truncate">{p.name}</div>
-                  <div className="text-xs text-gray-500 truncate">{p.email}</div>
+                  <div className="font-medium hl-heading truncate">
+                    {p.name}
+                  </div>
+                  <div className="text-xs hl-muted truncate">{p.email}</div>
                 </div>
 
-                {/* Actions: icons on mobile, icon+text on ≥sm */}
                 <div className="flex items-center gap-1.5 shrink-0">
                   <button
                     onClick={() => onAccept(group.rideId, p.userId)}
@@ -61,7 +63,7 @@ export default function RideRequestGroup({
                     onClick={() => onDecline(group.rideId, p.userId)}
                     aria-label="Decline"
                     title="Decline"
-                    className="p-2 sm:px-3 sm:py-1.5 rounded-full sm:rounded-lg border text-slate-700 hover:bg-slate-100 active:scale-95 transition inline-flex items-center gap-2"
+                    className="p-2 sm:px-3 sm:py-1.5 rounded-full sm:rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-100 dark:hover:bg-slate-800 active:scale-95 transition inline-flex items-center gap-2"
                   >
                     <X className="h-4 w-4" />
                     <span className="hidden sm:inline text-sm">Decline</span>
@@ -75,9 +77,9 @@ export default function RideRequestGroup({
 
       {/* Accepted */}
       <div className="mt-5">
-        <h4 className="text-sm font-semibold text-slate-700 mb-2">Accepted</h4>
+        <h4 className="text-sm font-semibold hl-body mb-2">Accepted</h4>
         {group.accepted.length === 0 ? (
-          <div className="rounded-lg border border-dashed border-gray-300 p-3 text-xs text-gray-500">
+          <div className="hl-empty text-left">
             No accepted passengers yet.
           </div>
         ) : (
@@ -85,18 +87,22 @@ export default function RideRequestGroup({
             {group.accepted.map((a) => (
               <div
                 key={`a-${group.rideId}-${a.userId}`}
-                className="flex items-center justify-between gap-3 rounded-lg border p-3"
+                className="rounded-lg border border-slate-200 dark:border-slate-700 p-3 flex items-center justify-between gap-3"
               >
                 <div className="min-w-0">
-                  <div className="font-medium text-slate-800 truncate">{a.name}</div>
-                  <div className="text-xs text-gray-500 truncate">{a.email}</div>
+                  <div className="font-medium hl-heading truncate">
+                    {a.name}
+                  </div>
+                  <div className="text-xs hl-muted truncate">
+                    {a.email}
+                  </div>
                 </div>
 
                 <button
                   onClick={() => onRemove(group.rideId, a.userId)}
                   aria-label="Remove passenger"
                   title="Remove passenger"
-                  className="p-2 sm:px-3 sm:py-1.5 rounded-full sm:rounded-lg border text-slate-700 hover:bg-slate-100 active:scale-95 transition inline-flex items-center gap-2"
+                  className="p-2 sm:px-3 sm:py-1.5 rounded-full sm:rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-100 dark:hover:bg-slate-800 active:scale-95 transition inline-flex items-center gap-2"
                 >
                   <UserMinus className="h-4 w-4" />
                   <span className="hidden sm:inline text-sm">Remove</span>

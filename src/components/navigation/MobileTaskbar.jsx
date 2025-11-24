@@ -3,14 +3,9 @@ import { Home, ClipboardList, Inbox, Plus, Map } from "lucide-react";
 import usePendingCount from "../../hooks/usePendingCount";
 import { useAuth } from "../../context/AuthContext";
 
-const baseBtn =
-  "relative flex flex-col items-center justify-center gap-1 text-xs font-medium transition-colors";
+const baseBtn = "hl-bottom-nav-link";
 const navClass = ({ isActive }) =>
-  [
-    baseBtn,
-    "text-gray-600 hover:text-indigo-600",
-    isActive ? "text-indigo-600" : "",
-  ].join(" ");
+  [baseBtn, isActive ? "hl-bottom-nav-link-active" : ""].join(" ");
 
 export default function MobileTaskbar() {
   const navigate = useNavigate();
@@ -22,29 +17,54 @@ export default function MobileTaskbar() {
       <nav
         className="
           fixed bottom-0 inset-x-0 z-40
-          border-t bg-white/90 backdrop-blur
+          hl-bottom-nav
           h-16
           pb-[env(safe-area-inset-bottom)]
         "
         aria-label="Mobile navigation"
       >
-        <div className="relative flex h-full items-center justify-between px-6">
+        <div className="flex h-full items-center justify-between px-6">
           {/* Left side */}
           <div className="flex items-center gap-8">
-            <NavLink to="/explore" className={navClass} aria-label="Explore">
+            <NavLink
+              to="/demo/explore"
+              className={navClass}
+              aria-label="Explore"
+            >
               <Map className="h-5 w-5" />
               <span>Explore</span>
             </NavLink>
 
-            <NavLink to="/" end className={navClass} aria-label="Home">
+            <NavLink
+              to="/demo"
+              end
+              className={navClass}
+              aria-label="Home"
+            >
               <Home className="h-5 w-5" />
               <span>Home</span>
             </NavLink>
           </div>
 
+          {/* Center FAB */}
+          <button
+            aria-label="Create ride"
+            onClick={() => navigate("/demo/my-rides")}
+            className="
+              hl-bottom-nav-fab
+              -translate-y-1
+            "
+          >
+            <Plus className="h-6 w-6" />
+          </button>
+
           {/* Right side */}
           <div className="flex items-center gap-8">
-            <NavLink to="/requests" className={navClass} aria-label="Requests">
+            <NavLink
+              to="/demo/requests"
+              className={navClass}
+              aria-label="Requests"
+            >
               <div className="relative">
                 <ClipboardList className="h-5 w-5" />
                 {user?.role === "driver" && pending > 0 && (
@@ -56,30 +76,19 @@ export default function MobileTaskbar() {
               <span>Requests</span>
             </NavLink>
 
-            <NavLink to="/inbox" className={navClass} aria-label="Inbox">
+            <NavLink
+              to="/demo/inbox"
+              className={navClass}
+              aria-label="Inbox"
+            >
               <Inbox className="h-5 w-5" />
               <span>Inbox</span>
             </NavLink>
           </div>
-
-          {/* Center FAB */}
-          <button
-            aria-label="Create ride"
-            onClick={() => navigate("/my-rides")}
-            className="
-              absolute -top-6 left-1/2 -translate-x-1/2
-              h-14 w-14 rounded-full
-              bg-indigo-600 text-white shadow-lg
-              inline-flex items-center justify-center
-              ring-4 ring-white
-              active:scale-95 transition
-            "
-          >
-            <Plus className="h-7 w-7" />
-          </button>
         </div>
       </nav>
 
+      {/* Spacer so content doesn't sit behind the bar */}
       <div className="h-20" />
     </div>
   );
