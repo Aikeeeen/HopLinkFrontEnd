@@ -1,7 +1,7 @@
 import { Outlet, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import Navbar from "../components/navigation/Navbar";
-import Footer from "../components/Footer";
+import Footer from "../components/navigation/Footer";
 import MobileTaskbar from "../components/navigation/MobileTaskbar";
 
 export default function RootLayout() {
@@ -12,24 +12,22 @@ export default function RootLayout() {
   }, [pathname]);
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900 flex flex-col">
+    <div className="min-h-screen hl-page flex flex-col">
       <Navbar />
       <main
         className="
           mx-auto w-full max-w-7xl flex-1
           px-4 sm:px-6 lg:px-8 py-8
-          md:pb-8 pb-24  /* extra space on mobile for the taskbar */
+          md:pb-8 pb-24
         "
       >
         <Outlet />
       </main>
 
-      {/* Desktop footer only */}
       <div className="hidden md:block">
         <Footer />
       </div>
 
-      {/* Mobile taskbar */}
       <MobileTaskbar />
     </div>
   );

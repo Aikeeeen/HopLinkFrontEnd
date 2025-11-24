@@ -1,52 +1,56 @@
 import { Routes, Route } from "react-router-dom";
 import RootLayout from "./layouts/RootLayout";
-import Home from "./pages/Home";
-import About from "./pages/About";
-import Contact from "./pages/Contact";
-import Explore from "./pages/Explore";
-import History from "./pages/History";
-import Inbox from "./pages/Inbox";
-import MyRides from "./pages/MyRides";
-import MyCar from "./pages/MyCar";
-import Settings from "./pages/Settings";
-import Support from "./pages/Support";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import NotFound from "./pages/NotFound";
+
+// Demo app pages
+import Home from "./pages/demo/Home";
+import About from "./pages/demo/About";
+import Contact from "./pages/demo/Contact";
+import Explore from "./pages/demo/Explore";
+import History from "./pages/demo/History";
+import Inbox from "./pages/demo/Inbox";
+import MyRides from "./pages/demo/MyRides";
+import MyCar from "./pages/demo/MyCar";
+import Settings from "./pages/demo/Settings";
+import Support from "./pages/demo/Support";
+import Login from "./pages/demo/Login";
+import Register from "./pages/demo/Register";
+import NotFound from "./pages/demo/NotFound";
+import Requests from "./pages/demo/Requests";
 import RequireAuth from "./routes/RequireAuth";
-import Requests from "./pages/Requests";
+
+// Landing page
+import LandingPage from "./pages/landingpage/LandingPage";
 
 export default function App() {
   return (
     <Routes>
-      <Route element={<RootLayout />}>
-        {/* ---------- Public routes ---------- */}
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/explore" element={<Explore />} />
+      {/* Public marketing site */}
+      <Route path="/" element={<LandingPage />} />
 
-        {/* ---------- Protected routes ---------- */}
+      {/* Demo application */}
+      <Route path="/demo" element={<RootLayout />}>
+        <Route index element={<Home />} />
+        <Route path="about" element={<About />} />
+        <Route path="contact" element={<Contact />} />
+        <Route path="explore" element={<Explore />} />
+
         <Route element={<RequireAuth />}>
-          {/* General logged-in routes */}
-          <Route path="/history" element={<History />} />
-          <Route path="/inbox" element={<Inbox />} />
-          <Route path="/requests" element={<Requests />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/support" element={<Support />} />
-
-          {/* Driver-only pages */}
-          <Route path="/my-rides" element={<MyRides />} />
-          <Route path="/my-car" element={<MyCar />} />
+          <Route path="history" element={<History />} />
+          <Route path="inbox" element={<Inbox />} />
+          <Route path="requests" element={<Requests />} />
+          <Route path="settings" element={<Settings />} />
+          <Route path="support" element={<Support />} />
+          <Route path="my-rides" element={<MyRides />} />
+          <Route path="my-car" element={<MyCar />} />
         </Route>
-
-        {/* ---------- Auth routes ---------- */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-
-        {/* ---------- 404 fallback ---------- */}
-        <Route path="*" element={<NotFound />} />
       </Route>
+
+      {/* Authentication */}
+      <Route path="/demo/login" element={<Login />} />
+      <Route path="/demo/register" element={<Register />} />
+
+      {/* Global fallback */}
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }

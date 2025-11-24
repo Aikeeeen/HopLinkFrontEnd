@@ -8,8 +8,8 @@ const baseBtn =
 const navClass = ({ isActive }) =>
   [
     baseBtn,
-    "text-gray-600 hover:text-indigo-600",
-    isActive ? "text-indigo-600" : "",
+    "text-gray-600 hover:text-indigo-600 dark:text-slate-200 dark:hover:text-indigo-300",
+    isActive ? "text-indigo-600 dark:text-indigo-300" : "",
   ].join(" ");
 
 export default function MobileTaskbar() {
@@ -23,6 +23,7 @@ export default function MobileTaskbar() {
         className="
           fixed bottom-0 inset-x-0 z-40
           border-t bg-white/90 backdrop-blur
+          dark:bg-slate-950/90 dark:border-slate-800
           h-16
           pb-[env(safe-area-inset-bottom)]
         "
@@ -31,12 +32,21 @@ export default function MobileTaskbar() {
         <div className="relative flex h-full items-center justify-between px-6">
           {/* Left side */}
           <div className="flex items-center gap-8">
-            <NavLink to="/explore" className={navClass} aria-label="Explore">
+            <NavLink
+              to="/demo/explore"
+              className={navClass}
+              aria-label="Explore"
+            >
               <Map className="h-5 w-5" />
               <span>Explore</span>
             </NavLink>
 
-            <NavLink to="/" end className={navClass} aria-label="Home">
+            <NavLink
+              to="/demo"
+              end
+              className={navClass}
+              aria-label="Home"
+            >
               <Home className="h-5 w-5" />
               <span>Home</span>
             </NavLink>
@@ -44,7 +54,11 @@ export default function MobileTaskbar() {
 
           {/* Right side */}
           <div className="flex items-center gap-8">
-            <NavLink to="/requests" className={navClass} aria-label="Requests">
+            <NavLink
+              to="/demo/requests"
+              className={navClass}
+              aria-label="Requests"
+            >
               <div className="relative">
                 <ClipboardList className="h-5 w-5" />
                 {user?.role === "driver" && pending > 0 && (
@@ -56,7 +70,11 @@ export default function MobileTaskbar() {
               <span>Requests</span>
             </NavLink>
 
-            <NavLink to="/inbox" className={navClass} aria-label="Inbox">
+            <NavLink
+              to="/demo/inbox"
+              className={navClass}
+              aria-label="Inbox"
+            >
               <Inbox className="h-5 w-5" />
               <span>Inbox</span>
             </NavLink>
@@ -65,7 +83,7 @@ export default function MobileTaskbar() {
           {/* Center FAB */}
           <button
             aria-label="Create ride"
-            onClick={() => navigate("/my-rides")}
+            onClick={() => navigate("/demo/my-rides")}
             className="
               absolute -top-6 left-1/2 -translate-x-1/2
               h-14 w-14 rounded-full

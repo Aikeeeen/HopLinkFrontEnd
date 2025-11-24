@@ -7,7 +7,9 @@ import usePendingCount from "../../hooks/usePendingCount";
 const linkClass = ({ isActive }) =>
   [
     "relative px-3 py-2 rounded-xl text-sm font-medium transition",
-    isActive ? "bg-indigo-600 text-white" : "text-gray-700 hover:bg-gray-100",
+    isActive
+      ? "bg-indigo-600 text-white"
+      : "text-gray-700 hover:bg-gray-100 dark:text-slate-200 dark:hover:bg-slate-800",
   ].join(" ");
 
 function Badge({ count }) {
@@ -24,10 +26,8 @@ function MoreMenu({ items }) {
   const ref = useRef(null);
   const location = useLocation();
 
-  // close on route change
   useEffect(() => setOpen(false), [location.pathname]);
 
-  // click outside
   useEffect(() => {
     if (!open) return;
     const onDoc = (e) => {
@@ -43,7 +43,7 @@ function MoreMenu({ items }) {
     <div className="relative" ref={ref}>
       <button
         onClick={() => setOpen((v) => !v)}
-        className="px-3 py-2 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-100 inline-flex items-center gap-2"
+        className="px-3 py-2 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-100 inline-flex items-center gap-2 dark:text-slate-200 dark:hover:bg-slate-800"
         aria-haspopup="menu"
         aria-expanded={open}
       >
@@ -54,7 +54,7 @@ function MoreMenu({ items }) {
       {open && (
         <div
           role="menu"
-          className="absolute right-0 z-50 mt-2 w-56 overflow-hidden rounded-xl border bg-white shadow-lg"
+          className="absolute right-0 z-50 mt-2 w-56 overflow-hidden rounded-xl border bg-white shadow-lg dark:bg-slate-900 dark:border-slate-700"
         >
           <div className="p-2">
             {items.map((l) => (
@@ -66,8 +66,8 @@ function MoreMenu({ items }) {
                   [
                     "block rounded-lg px-3 py-2 text-sm transition",
                     isActive
-                      ? "bg-indigo-50 text-indigo-700"
-                      : "text-gray-700 hover:bg-gray-50",
+                      ? "bg-indigo-50 text-indigo-700 dark:bg-indigo-600/20 dark:text-indigo-200"
+                      : "text-gray-700 hover:bg-gray-50 dark:text-slate-200 dark:hover:bg-slate-800",
                   ].join(" ")
                 }
               >
@@ -83,19 +83,19 @@ function MoreMenu({ items }) {
 
 export default function DesktopNav() {
   const { user } = useAuth();
-  const pending = usePendingCount(); // driver badge
+  const pending = usePendingCount();
 
-  // Build role-aware primary/secondary sets
   const { primary, secondary } = useMemo(() => {
     if (!user) {
-      // Guest
+      // Guest demo nav (inside /demo shell)
       return {
         primary: [
-          { to: "/", label: "Home", end: true },
-          { to: "/explore", label: "Explore" },
-          { to: "/about", label: "About" },
-          { to: "/contact", label: "Contact" },
+          { to: "/demo", label: "Home", end: true },
+          { to: "/demo/explore", label: "Explore" },
+          { to: "/demo/about", label: "About" },
+          { to: "/demo/contact", label: "Contact" },
         ],
+        secondary: [],
       };
     }
 
@@ -103,17 +103,17 @@ export default function DesktopNav() {
       // Driver
       return {
         primary: [
-          { to: "/", label: "Home", end: true },
-          { to: "/explore", label: "Explore" },
-          { to: "/inbox", label: "Inbox" },
-          { to: "/requests", label: "Requests", showBadge: true },
-          { to: "/my-rides", label: "My Rides" },
+          { to: "/demo", label: "Home", end: true },
+          { to: "/demo/explore", label: "Explore" },
+          { to: "/demo/inbox", label: "Inbox" },
+          { to: "/demo/requests", label: "Requests", showBadge: true },
+          { to: "/demo/my-rides", label: "My Rides" },
         ],
         secondary: [
-          { to: "/history", label: "History" },
-          { to: "/my-car", label: "My Car" },
-          { to: "/settings", label: "Settings" },
-          { to: "/support", label: "Support" },
+          { to: "/demo/history", label: "History" },
+          { to: "/demo/my-car", label: "My Car" },
+          { to: "/demo/settings", label: "Settings" },
+          { to: "/demo/support", label: "Support" },
         ],
       };
     }
@@ -121,29 +121,26 @@ export default function DesktopNav() {
     // Passenger
     return {
       primary: [
-        { to: "/", label: "Home", end: true },
-        { to: "/explore", label: "Explore" },
-        { to: "/inbox", label: "Inbox" },
+        { to: "/demo", label: "Home", end: true },
+        { to: "/demo/explore", label: "Explore" },
+        { to: "/demo/inbox", label: "Inbox" },
       ],
       secondary: [
-        { to: "/history", label: "History" },
-        { to: "/settings", label: "Settings" },
-        { to: "/support", label: "Support" },
+        { to: "/demo/history", label: "History" },
+        { to: "/demo/settings", label: "Settings" },
+        { to: "/demo/support", label: "Support" },
       ],
     };
   }, [user]);
 
   return (
     <nav className="hidden md:flex items-center gap-2">
-      {/* Primary inline */}
       {primary.map((l) => (
         <NavLink key={l.to} to={l.to} end={l.end} className={linkClass}>
           {l.label}
           {l.showBadge && <Badge count={pending} />}
         </NavLink>
       ))}
-
-      {/* Secondary in a compact dropdown */}
       <MoreMenu items={secondary} />
     </nav>
   );

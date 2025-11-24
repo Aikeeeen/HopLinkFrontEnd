@@ -1,13 +1,13 @@
 import { Users } from "lucide-react";
 import { useEffect, useState, useCallback } from "react";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 import {
   listRequestsGroupedForDriver,
   acceptRideRequest,
   declineRideRequest,
   removeAcceptedPassenger,
-} from "../lib/db";
-import RideRequestGroup from "../components/requests/RideRequestGroup";
+} from "../../lib/db";
+import RideRequestGroup from "../../components/requests/RideRequestGroup";
 
 export default function Requests() {
   const { user } = useAuth();
@@ -35,18 +35,22 @@ export default function Requests() {
 
   if (!user) {
     return (
-      <div className="max-w-4xl mx-auto p-6">
-        <h1 className="text-2xl font-semibold text-slate-800 mb-2">Join Requests</h1>
-        <p className="text-gray-600">Please log in to view your ride requests.</p>
+      <div className="hl-page">
+        <h1 className="hl-heading mb-2">Join Requests</h1>
+        <p className="hl-body">
+          Please log in to view your ride requests.
+        </p>
       </div>
     );
   }
 
   if (!isDriver) {
     return (
-      <div className="max-w-4xl mx-auto p-6">
-        <h1 className="text-2xl font-semibold text-slate-800 mb-2">Join Requests</h1>
-        <p className="text-gray-600">Only drivers can view requests for their rides.</p>
+      <div className="hl-page">
+        <h1 className="hl-heading mb-2">Join Requests</h1>
+        <p className="hl-body">
+          Only drivers can view requests for their rides.
+        </p>
       </div>
     );
   }
@@ -59,6 +63,7 @@ export default function Requests() {
       alert(e.message || "Could not accept request");
     }
   };
+
   const onDecline = async (rideId, passengerId) => {
     try {
       await declineRideRequest(rideId, passengerId, user.id);
@@ -67,6 +72,7 @@ export default function Requests() {
       alert(e.message || "Could not decline request");
     }
   };
+
   const onRemoveAccepted = async (rideId, passengerId) => {
     try {
       await removeAcceptedPassenger(rideId, passengerId, user.id);
@@ -78,18 +84,20 @@ export default function Requests() {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <div className="flex items-center gap-3 mb-6">
+      <div className="hl-section-title-icon">
         <Users className="h-6 w-6 text-indigo-600" />
-        <h1 className="text-2xl font-semibold text-slate-800">Join Requests</h1>
+        <h1 className="hl-heading">Join Requests</h1>
       </div>
 
       {err && (
-        <div className="mb-4 rounded-xl bg-red-50 text-red-700 p-3 text-sm">{err}</div>
+        <div className="mb-4 hl-card p-3 text-sm bg-red-50 text-red-700 dark:bg-red-950/40 dark:text-red-200 border-none">
+          {err}
+        </div>
       )}
 
       {groups.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-gray-300 p-6 text-center text-gray-500">
-          You don't have any rides yet.
+        <div className="hl-empty">
+          You don&apos;t have any rides yet.
         </div>
       ) : (
         <div className="space-y-6">

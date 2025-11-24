@@ -1,12 +1,21 @@
-import { Car, MapPin, Calendar, Clock, Users, Trash2, Pencil, User as UserIcon } from "lucide-react";
+import {
+  Car,
+  MapPin,
+  Calendar,
+  Clock,
+  Users,
+  Trash2,
+  Pencil,
+  User as UserIcon,
+} from "lucide-react";
 
 export default function RideCard({ ride, ownerName, onDelete, onEdit }) {
   if (!ride) return null;
 
   return (
-    <div className="rounded-2xl border bg-white p-4 shadow-sm">
+    <div className="hl-card p-4">
       <div className="flex items-start justify-between">
-        <h3 className="text-base font-semibold flex items-center gap-2">
+        <h3 className="text-base font-semibold flex items-center gap-2 hl-heading">
           <Car className="h-4 w-4" />
           {ride.origin} → {ride.destination}
         </h3>
@@ -14,7 +23,7 @@ export default function RideCard({ ride, ownerName, onDelete, onEdit }) {
           {onEdit && (
             <button
               onClick={() => onEdit(ride)}
-              className="rounded-lg p-2 text-slate-500 hover:bg-slate-100"
+              className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
               aria-label="Edit ride"
               title="Edit ride"
             >
@@ -24,7 +33,7 @@ export default function RideCard({ ride, ownerName, onDelete, onEdit }) {
           {onDelete && (
             <button
               onClick={() => onDelete(ride)}
-              className="rounded-lg p-2 text-slate-500 hover:bg-slate-100"
+              className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
               aria-label="Delete ride"
               title="Delete ride"
             >
@@ -34,7 +43,7 @@ export default function RideCard({ ride, ownerName, onDelete, onEdit }) {
         </div>
       </div>
 
-      <div className="mt-2 grid gap-2 text-sm text-slate-700 sm:grid-cols-2">
+      <div className="mt-2 grid gap-2 text-sm hl-body sm:grid-cols-2">
         <div className="flex items-center gap-2">
           <UserIcon className="h-4 w-4" />
           {ownerName || "Unknown user"}
@@ -58,7 +67,9 @@ export default function RideCard({ ride, ownerName, onDelete, onEdit }) {
       </div>
 
       {ride.km != null && (
-        <p className="mt-2 text-xs text-slate-500">Estimated {ride.km} km</p>
+        <p className="mt-2 text-xs hl-muted">
+          Estimated {ride.km} km
+        </p>
       )}
     </div>
   );

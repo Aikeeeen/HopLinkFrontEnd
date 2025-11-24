@@ -1,1 +1,117 @@
 @import "tailwindcss";
+
+/* Make Tailwind's `dark:` variant use [data-theme="dark"] on <html> */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* Shared HopLink design tokens / utilities */
+@layer utilities {
+  /* Page background + base text */
+  .hl-page {
+    @apply bg-gray-50 text-gray-900
+           dark:bg-slate-950 dark:text-slate-50;
+  }
+
+  /* Generic card */
+  .hl-card {
+    @apply rounded-2xl border border-slate-200 bg-white shadow-sm
+           dark:border-slate-700 dark:bg-slate-900;
+  }
+
+  /* Empty-state box */
+  .hl-empty {
+    @apply rounded-xl border border-dashed border-slate-300 p-6
+           text-center text-sm text-slate-500
+           dark:border-slate-700 dark:text-slate-400;
+  }
+
+  /* Typography helpers */
+  .hl-heading {
+    @apply text-slate-900 dark:text-slate-50;
+  }
+
+  .hl-body {
+    @apply text-slate-700 dark:text-slate-200;
+  }
+
+  .hl-muted {
+    @apply text-slate-500 dark:text-slate-400;
+  }
+
+  /* Basic input */
+  .hl-input {
+    @apply w-full rounded-xl border border-slate-200 bg-white px-3 py-2
+           text-sm text-slate-900 outline-none
+           focus:ring-2 focus:ring-indigo-500
+           dark:border-slate-700 dark:bg-slate-900 dark:text-slate-50;
+  }
+
+  /* Input with "Show/Hide" button (password) */
+  .hl-input-with-btn {
+    @apply w-full rounded-xl border border-slate-200 bg-white px-3 py-2
+           text-sm text-slate-900 outline-none pr-16
+           focus:ring-2 focus:ring-indigo-500
+           dark:border-slate-700 dark:bg-slate-900 dark:text-slate-50;
+  }
+
+  .hl-toggle-btn {
+    @apply absolute inset-y-0 right-2 my-auto h-7 px-2 text-xs
+           rounded-lg border border-slate-300 bg-white text-slate-600
+           hover:bg-slate-100
+           dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200
+           dark:hover:bg-slate-700;
+  }
+
+  .hl-label {
+    @apply mb-1 block text-sm font-medium
+           text-slate-700 dark:text-slate-200;
+  }
+
+  /* Primary & secondary buttons */
+  .hl-btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl
+           bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white
+           hover:bg-indigo-700 transition;
+  }
+
+  .hl-btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl
+           border border-slate-300 px-5 py-2.5 text-sm font-medium text-slate-700
+           hover:bg-slate-100
+           dark:border-slate-600 dark:text-slate-100 dark:hover:bg-slate-800;
+  }
+
+  /* Pills / badges */
+  .hl-badge-pill {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1
+           text-[11px] font-medium;
+  }
+
+  /* Auth layout helpers */
+  .hl-auth-card {
+    @apply rounded-2xl border border-slate-200 bg-white shadow-sm
+           dark:border-slate-700 dark:bg-slate-900
+           max-w-md w-full mx-auto p-6 sm:p-8;
+  }
+
+  .hl-auth-warning {
+    @apply mt-3 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2
+           text-xs text-amber-700
+           dark:bg-amber-500/20 dark:text-amber-200;
+  }
+
+  .hl-auth-footer {
+    @apply mt-6 text-center text-sm
+           text-slate-500 dark:text-slate-400;
+  }
+
+  .hl-link-muted {
+    @apply font-medium text-indigo-600 hover:text-indigo-700 hover:underline
+           dark:text-indigo-300 dark:hover:text-indigo-200;
+  }
+
+  .hl-error {
+    @apply rounded-xl border border-red-300 bg-red-50 px-3 py-2
+           text-xs text-red-700
+           dark:border-red-500 dark:bg-red-950/40 dark:text-red-200;
+  }
+}
