@@ -36,7 +36,7 @@ export default function AuthButtonsMobile() {
         title="Logout"
         onClick={() => {
           logout();
-          navigate("/", { replace: true });
+          navigate("/demo", { replace: true });
         }}
         className="p-2 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-100 dark:hover:bg-slate-800"
       >

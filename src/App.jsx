@@ -27,13 +27,17 @@ export default function App() {
       {/* Public marketing site */}
       <Route path="/" element={<LandingPage />} />
 
-      {/* Demo application */}
+      {/* Demo application (shell + navbar + footer etc.) */}
       <Route path="/demo" element={<RootLayout />}>
+        {/* Public demo pages */}
         <Route index element={<Home />} />
         <Route path="about" element={<About />} />
         <Route path="contact" element={<Contact />} />
         <Route path="explore" element={<Explore />} />
+        <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
 
+        {/* Auth-protected demo pages */}
         <Route element={<RequireAuth />}>
           <Route path="history" element={<History />} />
           <Route path="inbox" element={<Inbox />} />
@@ -44,10 +48,6 @@ export default function App() {
           <Route path="my-car" element={<MyCar />} />
         </Route>
       </Route>
-
-      {/* Authentication */}
-      <Route path="/demo/login" element={<Login />} />
-      <Route path="/demo/register" element={<Register />} />
 
       {/* Global fallback */}
       <Route path="*" element={<NotFound />} />

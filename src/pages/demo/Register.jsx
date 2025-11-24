@@ -16,7 +16,7 @@ export default function Register() {
   const navigate = useNavigate();
 
   return (
-    <section className="hl-page flex min-h-[60vh] items-center justify-center px-4">
+    <section className="flex min-h-[70vh] items-center justify-center px-4 py-10">
       <div className="hl-auth-card">
         <h1 className="text-center text-2xl font-bold tracking-tight hl-heading">
           Create your <span className="text-indigo-600">HopLink demo</span> account

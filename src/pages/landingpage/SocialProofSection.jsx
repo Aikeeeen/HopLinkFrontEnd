@@ -24,7 +24,7 @@ const testimonials = [
 export default function SocialProofSection() {
   return (
     <section className="mt-16">
-      <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+      <h2 className="text-2xl font-semibold tracking-tight hl-heading sm:text-3xl">
         People already planning shared trips
       </h2>
 
@@ -32,15 +32,13 @@ export default function SocialProofSection() {
         {testimonials.map((t) => (
           <figure
             key={t.name}
-            className="flex h-full flex-col rounded-3xl border border-slate-800 bg-slate-950/60 p-4"
+            className="hl-card-soft p-4 flex h-full flex-col"
           >
-            <Quote className="h-4 w-4 text-emerald-300" />
-            <blockquote className="mt-3 text-sm text-slate-200">
-              {t.quote}
-            </blockquote>
-            <figcaption className="mt-4 text-xs text-slate-400">
-              <span className="font-medium text-slate-100">{t.name}</span>{" "}
-              · {t.role}
+            <Quote className="h-4 w-4 text-emerald-600 dark:text-emerald-300" />
+            <blockquote className="mt-3 text-sm hl-body">{t.quote}</blockquote>
+            <figcaption className="mt-4 text-xs hl-muted">
+              <span className="font-medium hl-heading">{t.name}</span> ·{" "}
+              {t.role}
             </figcaption>
           </figure>
         ))}

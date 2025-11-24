@@ -23,7 +23,7 @@ export default function AuthButtons() {
       <button
         onClick={() => {
           logout();
-          navigate("/", { replace: true });
+          navigate("/demo", { replace: true });
         }}
         className="hl-btn-secondary"
       >

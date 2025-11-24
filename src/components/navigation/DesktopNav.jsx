@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useMemo } from "react";
+import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { MoreHorizontal } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
@@ -85,53 +85,46 @@ export default function DesktopNav() {
   const { user } = useAuth();
   const pending = usePendingCount();
 
-  const { primary, secondary } = useMemo(() => {
-    if (!user) {
-      // Guest demo nav (inside /demo shell)
-      return {
-        primary: [
-          { to: "/demo", label: "Home", end: true },
-          { to: "/demo/explore", label: "Explore" },
-          { to: "/demo/about", label: "About" },
-          { to: "/demo/contact", label: "Contact" },
-        ],
-        secondary: [],
-      };
-    }
+  let primary = [];
+  let secondary = [];
 
-    if (user.role === "driver") {
-      // Driver
-      return {
-        primary: [
-          { to: "/demo", label: "Home", end: true },
-          { to: "/demo/explore", label: "Explore" },
-          { to: "/demo/inbox", label: "Inbox" },
-          { to: "/demo/requests", label: "Requests", showBadge: true },
-          { to: "/demo/my-rides", label: "My Rides" },
-        ],
-        secondary: [
-          { to: "/demo/history", label: "History" },
-          { to: "/demo/my-car", label: "My Car" },
-          { to: "/demo/settings", label: "Settings" },
-          { to: "/demo/support", label: "Support" },
-        ],
-      };
-    }
-
+  if (!user) {
+    // Guest demo nav (inside /demo shell)
+    primary = [
+      { to: "/demo", label: "Home", end: true },
+      { to: "/demo/explore", label: "Explore" },
+      { to: "/demo/about", label: "About" },
+      { to: "/demo/contact", label: "Contact" },
+    ];
+    secondary = [];
+  } else if (user.role === "driver") {
+    // Driver: align with mobile (plus Explore)
+    primary = [
+      { to: "/demo", label: "Home", end: true },
+      { to: "/demo/explore", label: "Explore" },
+      { to: "/demo/inbox", label: "Inbox" },
+      { to: "/demo/requests", label: "Requests", showBadge: true },
+      { to: "/demo/my-rides", label: "My Rides" },
+    ];
+    secondary = [
+      { to: "/demo/history", label: "History" },
+      { to: "/demo/my-car", label: "My Car" },
+      { to: "/demo/settings", label: "Settings" },
+      { to: "/demo/support", label: "Support" },
+    ];
+  } else {
     // Passenger
-    return {
-      primary: [
-        { to: "/demo", label: "Home", end: true },
-        { to: "/demo/explore", label: "Explore" },
-        { to: "/demo/inbox", label: "Inbox" },
-      ],
-      secondary: [
-        { to: "/demo/history", label: "History" },
-        { to: "/demo/settings", label: "Settings" },
-        { to: "/demo/support", label: "Support" },
-      ],
-    };
-  }, [user]);
+    primary = [
+      { to: "/demo", label: "Home", end: true },
+      { to: "/demo/explore", label: "Explore" },
+      { to: "/demo/inbox", label: "Inbox" },
+    ];
+    secondary = [
+      { to: "/demo/history", label: "History" },
+      { to: "/demo/settings", label: "Settings" },
+      { to: "/demo/support", label: "Support" },
+    ];
+  }
 
   return (
     <nav className="hidden md:flex items-center gap-2">

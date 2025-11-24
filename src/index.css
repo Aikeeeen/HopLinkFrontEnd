@@ -1,6 +1,5 @@
 @import "tailwindcss";
 
-/* Make Tailwind's `dark:` variant use [data-theme="dark"] on <html> */
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 /* Shared HopLink design tokens / utilities */
@@ -115,3 +114,61 @@
            dark:border-red-500 dark:bg-red-950/40 dark:text-red-200;
   }
 }
+
+  /* Soft / variant cards for marketing sections */
+  .hl-card-soft {
+    @apply rounded-3xl border border-slate-200 bg-white shadow-sm
+           dark:border-slate-800 dark:bg-slate-950/60;
+  }
+
+  .hl-card-stat {
+    @apply rounded-2xl border border-slate-200 bg-white shadow-sm
+           dark:border-slate-800 dark:bg-slate-900/60;
+  }
+
+  /* Hero / marketing text helpers */
+  .hl-hero-kicker {
+    @apply inline-flex items-center gap-2 rounded-full border border-emerald-500/20
+           bg-emerald-500/10 px-2.5 py-1 text-[11px] font-medium tracking-wide
+           uppercase text-emerald-700
+           dark:text-emerald-200;
+  }
+
+  .hl-hero-strip {
+    @apply rounded-2xl border border-emerald-500/20 bg-linear-to-r
+           from-emerald-500/10 via-emerald-500/5 to-slate-50
+           dark:to-slate-900;
+  }
+
+  .hl-section-divider {
+    @apply border-y border-slate-200 dark:border-slate-800;
+  }
+
+    /* Bottom navigation (mobile taskbar) */
+  .hl-bottom-nav {
+  @apply border-t bg-white/90 backdrop-blur
+         dark:bg-slate-950/90 dark:border-slate-800;
+}
+
+.hl-bottom-nav-link {
+  @apply relative flex flex-col items-center justify-center gap-1
+         text-xs font-medium
+         text-slate-600 hover:text-indigo-600
+         dark:text-slate-200 dark:hover:text-indigo-300;
+}
+
+.hl-bottom-nav-link-active {
+  @apply text-indigo-600 dark:text-indigo-300;
+}
+
+.hl-bottom-nav-fab {
+  @apply
+    h-12 w-12
+    rounded-full
+    bg-indigo-600 text-white
+    shadow-lg shadow-indigo-600/25
+    inline-flex items-center justify-center
+    active:scale-95 transition;
+}
+  
+

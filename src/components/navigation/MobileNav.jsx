@@ -21,10 +21,10 @@ import usePendingCount from "../../hooks/usePendingCount";
 
 const navLinkClass = ({ isActive }) =>
   [
-    "relative flex items-center gap-3 rounded-lg px-4 py-2 text-base font-medium transition",
+    "relative flex items-center gap-3 rounded-lg px-4 py-2 text-sm font-medium transition",
     isActive
       ? "bg-indigo-600 text-white"
-      : "text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-slate-50",
+      : "hl-body hover:bg-indigo-50 hover:text-indigo-700 dark:hover:bg-slate-800 dark:hover:text-slate-50",
   ].join(" ");
 
 function initialsFrom(nameOrEmail = "") {
@@ -56,13 +56,13 @@ function UserHeader({ user }) {
 
   const roleClasses =
     role === "driver"
-      ? "bg-emerald-100 text-emerald-700"
+      ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-200"
       : role === "passenger"
-      ? "bg-sky-100 text-sky-700"
-      : "bg-slate-100 text-slate-600";
+      ? "bg-sky-100 text-sky-700 dark:bg-sky-500/20 dark:text-sky-200"
+      : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-200";
 
   return (
-    <div className="px-4 py-3 border-b bg-linear-to-r from-white to-indigo-50">
+    <div className="px-4 py-3 border-b bg-linear-to-r from-white to-indigo-50 dark:from-slate-950 dark:to-slate-900">
       <div className="flex items-center gap-3">
         <div className="relative h-10 w-10 rounded-full bg-indigo-600 text-white grid place-items-center font-semibold">
           {initials}
@@ -71,23 +71,21 @@ function UserHeader({ user }) {
 
         <div className="min-w-0">
           <div className="flex items-center gap-2">
-            <p className="truncate font-semibold text-slate-900">{name}</p>
+            <p className="truncate font-semibold hl-heading text-sm">{name}</p>
             <span
-              className={`text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded-full ${roleClasses}`}
+              className={`hl-badge-pill text-[10px] uppercase tracking-wide ${roleClasses}`}
             >
               {role}
             </span>
           </div>
 
           {showRating ? (
-            <p className="text-xs text-slate-600 mt-0.5">
+            <p className="text-xs mt-0.5 hl-body">
               <span className="font-medium text-amber-600">{rating} ★</span>{" "}
-              <span className="text-slate-500">({reviews})</span>
+              <span className="hl-muted">({reviews})</span>
             </p>
           ) : (
-            <p className="text-xs text-slate-500 mt-0.5 italic">
-              Not signed in
-            </p>
+            <p className="text-xs mt-0.5 italic hl-muted">Not signed in</p>
           )}
         </div>
       </div>
@@ -175,7 +173,7 @@ export default function MobileNav() {
         aria-label="Mobile navigation"
       >
         <div className="flex items-center justify-between px-4 py-4 shadow-sm bg-white dark:bg-slate-950">
-          <h2 className="text-lg font-semibold">
+          <h2 className="text-lg font-semibold hl-heading">
             HopLink<span className="text-indigo-600">Carpooling</span>
           </h2>
           <button

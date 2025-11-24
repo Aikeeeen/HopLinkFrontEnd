@@ -3,11 +3,11 @@ import { ArrowRight } from "lucide-react";
 export default function FinalCTA({ onTryDemo }) {
   return (
     <section className="mt-16">
-      <div className="rounded-3xl border border-emerald-500/20 bg-slate-950/60 p-6 sm:p-8">
-        <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl text-slate-50">
+      <div className="hl-card-soft p-6 sm:p-8">
+        <h2 className="text-2xl font-semibold tracking-tight hl-heading sm:text-3xl">
           Try the HopLink demo today
         </h2>
-        <p className="mt-3 max-w-2xl text-sm text-slate-300 sm:text-base">
+        <p className="mt-3 max-w-2xl text-sm hl-body sm:text-base">
           Click around, create a test account, and see how planning shared rides
           could work for your commute. This is a local demo environment — we
           don&apos;t store your data on a server, but we still recommend using
@@ -18,12 +18,12 @@ export default function FinalCTA({ onTryDemo }) {
           <button
             type="button"
             onClick={onTryDemo}
-            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-slate-950 shadow-lg shadow-emerald-500/30 transition hover:bg-emerald-400"
+            className="hl-btn-primary rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-lg shadow-emerald-500/30"
           >
-            Open demo app
+            <span>Open demo app</span>
             <ArrowRight className="h-4 w-4" />
           </button>
-          <p className="text-xs text-slate-400 max-w-sm">
+          <p className="max-w-sm text-xs hl-muted">
             No signup emails, no real payments, no commitments. Just a preview
             of the experience.
           </p>

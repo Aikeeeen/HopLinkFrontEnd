@@ -15,7 +15,7 @@ export default function Login() {
     typeof from === "string" && from.startsWith("/demo") ? from : "/demo";
 
   return (
-    <section className="hl-page flex min-h-[60vh] items-center justify-center px-4">
+    <section className="flex min-h-[70vh] items-center justify-center px-4 py-10">
       <div className="hl-auth-card">
         <h1 className="text-2xl font-bold tracking-tight text-center hl-heading">
           Sign in to <span className="text-indigo-600">HopLink demo</span>

@@ -11,9 +11,19 @@ export default function Navbar() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Brand */}
-          <NavLink to="/" className="text-xl font-semibold tracking-tight">
-            HopLink<span className="text-indigo-600">Carpooling</span>
-          </NavLink>
+            <NavLink to="/demo" className="flex items-center gap-2">
+              {/* Mobile brand text instead of logo */}
+              <span className="md:hidden text-lg font-semibold hl-heading tracking-tight">
+                Hop
+                <span className="text-indigo-600">Link</span>
+              </span>
+
+              {/* Desktop brand (unchanged) */}
+              <span className="hidden md:inline text-xl font-semibold hl-heading tracking-tight">
+                HopLink
+                <span className="text-indigo-600">Carpooling</span>
+              </span>
+            </NavLink>
 
           {/* Center nav (desktop) */}
           <div className="hidden md:block">
