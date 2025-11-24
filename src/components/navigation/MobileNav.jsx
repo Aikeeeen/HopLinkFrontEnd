@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import usePendingCount from "../../hooks/usePendingCount";
+import useInboxUnreadCount from "../../hooks/useInboxUnreadCount";
 
 const navLinkClass = ({ isActive }) =>
   [
@@ -96,6 +97,7 @@ function UserHeader({ user }) {
 export default function MobileNav() {
   const { user } = useAuth();
   const pending = usePendingCount();
+  const inboxUnread = useInboxUnreadCount();
   const [open, setOpen] = useState(false);
   const sidebarRef = useRef(null);
 
@@ -112,12 +114,12 @@ export default function MobileNav() {
       return [
         { to: "/demo", label: "Home", end: true, Icon: Home },
         { to: "/demo/history", label: "History", Icon: History },
-        { to: "/demo/inbox", label: "Inbox", Icon: Inbox },
+        { to: "/demo/inbox", label: "Inbox", Icon: Inbox, showInboxBadge: true },
         {
           to: "/demo/requests",
           label: "Requests",
           Icon: ClipboardList,
-          showBadge: true,
+          showPendingBadge: true,
         },
         { to: "/demo/my-rides", label: "My Rides", Icon: ListChecks },
         { to: "/demo/my-car", label: "My Car", Icon: Car },
@@ -129,7 +131,7 @@ export default function MobileNav() {
     return [
       { to: "/demo", label: "Home", end: true, Icon: Home },
       { to: "/demo/history", label: "History", Icon: History },
-      { to: "/demo/inbox", label: "Inbox", Icon: Inbox },
+      { to: "/demo/inbox", label: "Inbox", Icon: Inbox, showInboxBadge: true },
       { to: "/demo/settings", label: "Settings", Icon: Settings },
       { to: "/demo/support", label: "Support", Icon: LifeBuoy },
     ];
@@ -139,7 +141,9 @@ export default function MobileNav() {
     if (!open) return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    return () => (document.body.style.overflow = prev);
+    return () => {
+      document.body.style.overflow = prev;
+    };
   }, [open]);
 
   useEffect(() => {
@@ -188,7 +192,7 @@ export default function MobileNav() {
         <UserHeader user={user} />
 
         <nav className="px-4 py-4 space-y-2">
-          {links.map(({ to, label, end, Icon, showBadge }) => (
+          {links.map(({ to, label, end, Icon, showPendingBadge, showInboxBadge }) => (
             <NavLink
               key={to}
               to={to}
@@ -201,9 +205,15 @@ export default function MobileNav() {
               })}
               <span>{label}</span>
 
-              {showBadge && pending > 0 && (
+              {showPendingBadge && pending > 0 && (
                 <span className="ml-auto inline-flex min-w-5 h-5 px-1 rounded-full bg-red-600 text-white text-[10px] leading-5 justify-center">
                   {pending > 99 ? "99+" : pending}
+                </span>
+              )}
+
+              {showInboxBadge && inboxUnread > 0 && (
+                <span className="ml-auto inline-flex min-w-5 h-5 px-1 rounded-full bg-red-600 text-white text-[10px] leading-5 justify-center">
+                  {inboxUnread > 99 ? "99+" : inboxUnread}
                 </span>
               )}
             </NavLink>

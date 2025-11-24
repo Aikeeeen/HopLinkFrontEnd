@@ -1,6 +1,7 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { Home, ClipboardList, Inbox, Plus, Map } from "lucide-react";
 import usePendingCount from "../../hooks/usePendingCount";
+import useInboxUnreadCount from "../../hooks/useInboxUnreadCount";
 import { useAuth } from "../../context/AuthContext";
 
 const baseBtn = "hl-bottom-nav-link";
@@ -11,6 +12,7 @@ export default function MobileTaskbar() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const pending = usePendingCount();
+  const inboxUnread = useInboxUnreadCount();
 
   return (
     <div className="md:hidden">
@@ -81,7 +83,14 @@ export default function MobileTaskbar() {
               className={navClass}
               aria-label="Inbox"
             >
-              <Inbox className="h-5 w-5" />
+              <div className="relative">
+                <Inbox className="h-5 w-5" />
+                {inboxUnread > 0 && (
+                  <span className="absolute -top-1 -right-1 min-w-4 h-4 px-1 rounded-full bg-red-600 text-white text-[10px] leading-4 text-center">
+                    {inboxUnread > 99 ? "99+" : inboxUnread}
+                  </span>
+                )}
+              </div>
               <span>Inbox</span>
             </NavLink>
           </div>

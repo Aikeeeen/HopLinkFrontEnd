@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import RideFilter from "../../components/explore/RideFilter";
 import BrowseRideCard from "../../components/explore/BrowseRideCard";
@@ -6,6 +7,7 @@ import { joinRide, leaveRide, listAllRidesForBrowse } from "../../lib/db";
 
 export default function Explore() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [filters, setFilters] = useState({});
   const [rides, setRides] = useState([]);
   const [fallback, setFallback] = useState([]);
@@ -73,6 +75,10 @@ export default function Explore() {
     await load();
   };
 
+  const handleOpenRide = (ride) => {
+    navigate(`/demo/rides/${ride.id}`);
+  };
+
   const canJoin = (r) =>
     !!user && user.role === "passenger" && user.id !== r.ownerId;
 
@@ -86,6 +92,7 @@ export default function Explore() {
           joinedStatus={r.joinedStatus}
           onJoin={handleJoin}
           onLeave={handleLeave}
+          onOpen={handleOpenRide} // NEW
         />
       ))}
     </div>

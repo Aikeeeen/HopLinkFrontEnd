@@ -3,6 +3,7 @@ import { NavLink, useLocation } from "react-router-dom";
 import { MoreHorizontal } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import usePendingCount from "../../hooks/usePendingCount";
+import useInboxUnreadCount from "../../hooks/useInboxUnreadCount";
 
 const linkClass = ({ isActive }) =>
   [
@@ -84,6 +85,7 @@ function MoreMenu({ items }) {
 export default function DesktopNav() {
   const { user } = useAuth();
   const pending = usePendingCount();
+  const inboxUnread = useInboxUnreadCount();
 
   let primary = [];
   let secondary = [];
@@ -102,8 +104,8 @@ export default function DesktopNav() {
     primary = [
       { to: "/demo", label: "Home", end: true },
       { to: "/demo/explore", label: "Explore" },
-      { to: "/demo/inbox", label: "Inbox" },
-      { to: "/demo/requests", label: "Requests", showBadge: true },
+      { to: "/demo/inbox", label: "Inbox", showInboxBadge: true },
+      { to: "/demo/requests", label: "Requests", showPendingBadge: true },
       { to: "/demo/my-rides", label: "My Rides" },
     ];
     secondary = [
@@ -117,7 +119,7 @@ export default function DesktopNav() {
     primary = [
       { to: "/demo", label: "Home", end: true },
       { to: "/demo/explore", label: "Explore" },
-      { to: "/demo/inbox", label: "Inbox" },
+      { to: "/demo/inbox", label: "Inbox", showInboxBadge: true },
     ];
     secondary = [
       { to: "/demo/history", label: "History" },
@@ -131,7 +133,8 @@ export default function DesktopNav() {
       {primary.map((l) => (
         <NavLink key={l.to} to={l.to} end={l.end} className={linkClass}>
           {l.label}
-          {l.showBadge && <Badge count={pending} />}
+          {l.showPendingBadge && <Badge count={pending} />}
+          {l.showInboxBadge && <Badge count={inboxUnread} />}
         </NavLink>
       ))}
       <MoreMenu items={secondary} />

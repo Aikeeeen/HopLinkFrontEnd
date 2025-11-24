@@ -1,75 +1,67 @@
-import {
-  Car,
-  MapPin,
-  Calendar,
-  Clock,
-  Users,
-  Trash2,
-  Pencil,
-  User as UserIcon,
-} from "lucide-react";
+import { Trash2, Pencil } from "lucide-react";
+import RideDetailsGrid from "./RideDetailsGrid";
+import RideCardHeader from "./RideCardHeader";
+import OpenGroupChatButton from "./OpenGroupChatButton";
 
-export default function RideCard({ ride, ownerName, onDelete, onEdit }) {
+export default function RideCard({ ride, ownerName, onDelete, onEdit, onOpen }) {
   if (!ride) return null;
 
-  return (
-    <div className="hl-card p-4">
-      <div className="flex items-start justify-between">
-        <h3 className="text-base font-semibold flex items-center gap-2 hl-heading">
-          <Car className="h-4 w-4" />
-          {ride.origin} → {ride.destination}
-        </h3>
-        <div className="flex items-center gap-1">
-          {onEdit && (
-            <button
-              onClick={() => onEdit(ride)}
-              className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
-              aria-label="Edit ride"
-              title="Edit ride"
-            >
-              <Pencil className="h-4 w-4" />
-            </button>
-          )}
-          {onDelete && (
-            <button
-              onClick={() => onDelete(ride)}
-              className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
-              aria-label="Delete ride"
-              title="Delete ride"
-            >
-              <Trash2 className="h-4 w-4" />
-            </button>
-          )}
-        </div>
-      </div>
+  const handleEditClick = (e) => {
+    e.stopPropagation();
+    if (onEdit) onEdit(ride);
+  };
 
-      <div className="mt-2 grid gap-2 text-sm hl-body sm:grid-cols-2">
-        <div className="flex items-center gap-2">
-          <UserIcon className="h-4 w-4" />
-          {ownerName || "Unknown user"}
-        </div>
-        <div className="flex items-center gap-2">
-          <MapPin className="h-4 w-4" />
-          {ride.origin} → {ride.destination}
-        </div>
-        <div className="flex items-center gap-2">
-          <Calendar className="h-4 w-4" />
-          {ride.date}
-        </div>
-        <div className="flex items-center gap-2">
-          <Clock className="h-4 w-4" />
-          {ride.departTime || "—"} → {ride.arriveTime || "—"}
-        </div>
-        <div className="flex items-center gap-2">
-          <Users className="h-4 w-4" />
-          {ride.seats} seats • {ride.tripType}
-        </div>
-      </div>
+  const handleDeleteClick = (e) => {
+    e.stopPropagation();
+    if (onDelete) onDelete(ride);
+  };
+
+  const handleOpenClick = (e) => {
+    e.stopPropagation();
+    if (onOpen) onOpen(ride);
+  };
+
+  const headerRightSlot = (
+    <>
+      {onEdit && (
+        <button
+          type="button"
+          onClick={handleEditClick}
+          className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
+          aria-label="Edit ride"
+          title="Edit ride"
+        >
+          <Pencil className="h-4 w-4" />
+        </button>
+      )}
+      {onDelete && (
+        <button
+          type="button"
+          onClick={handleDeleteClick}
+          className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
+          aria-label="Delete ride"
+          title="Delete ride"
+        >
+          <Trash2 className="h-4 w-4" />
+        </button>
+      )}
+    </>
+  );
+
+  return (
+    <div className="hl-card p-4 hover:shadow-md transition">
+      <RideCardHeader ride={ride} rightSlot={headerRightSlot} />
+
+      <RideDetailsGrid ride={ride} ownerName={ownerName} />
 
       {ride.km != null && (
-        <p className="mt-2 text-xs hl-muted">
-          Estimated {ride.km} km
-        </p>
+        <p className="mt-2 text-xs hl-muted">Estimated {ride.km} km</p>
+      )}
+
+      {onOpen && (
+        <div className="mt-3 flex justify-end">
+          <OpenGroupChatButton onClick={handleOpenClick} />
+        </div>
       )}
     </div>
   );

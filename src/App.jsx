@@ -18,6 +18,10 @@ import NotFound from "./pages/demo/NotFound";
 import Requests from "./pages/demo/Requests";
 import RequireAuth from "./routes/RequireAuth";
 
+// NEW: ride detail + chat
+import RideDetail from "./pages/demo/RideDetail";
+import RideChat from "./pages/demo/RideChat";
+
 // Landing page
 import LandingPage from "./pages/landingpage/LandingPage";
 
@@ -46,6 +50,10 @@ export default function App() {
           <Route path="support" element={<Support />} />
           <Route path="my-rides" element={<MyRides />} />
           <Route path="my-car" element={<MyCar />} />
+
+          {/* 🔹 New ride routes */}
+          <Route path="rides/:rideId" element={<RideDetail />} />
+          <Route path="rides/:rideId/chat" element={<RideChat />} />
         </Route>
       </Route>
 

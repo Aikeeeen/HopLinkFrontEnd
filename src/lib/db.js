@@ -53,6 +53,27 @@ function _ensureSchema() {
       FOREIGN KEY(ride_id) REFERENCES rides(id),
       FOREIGN KEY(user_id) REFERENCES users(id)
     );
+
+        /* Group chat per ride */
+    CREATE TABLE IF NOT EXISTS ride_messages (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      ride_id INTEGER NOT NULL,
+      sender_id INTEGER NOT NULL,
+      body TEXT NOT NULL,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY(ride_id) REFERENCES rides(id),
+      FOREIGN KEY(sender_id) REFERENCES users(id)
+    );
+
+    /* Per-ride read markers so we can show unread counts in Inbox */
+    CREATE TABLE IF NOT EXISTS ride_message_reads (
+      ride_id INTEGER NOT NULL,
+      user_id INTEGER NOT NULL,
+      last_read_at TEXT NOT NULL,
+      PRIMARY KEY (ride_id, user_id),
+      FOREIGN KEY(ride_id) REFERENCES rides(id),
+      FOREIGN KEY(user_id) REFERENCES users(id)
+    );
   `);
 
   // Lightweight migration: add status column if missing
@@ -538,3 +559,316 @@ export async function removeAcceptedPassenger(rideId, passengerId, driverId) {
   );
   _persist();
 }
+
+/* ============ Ride detail + chat / inbox ============ */
+
+/** Full ride detail including driver + passengers */
+export async function getRideWithParticipants(rideId) {
+  const db = await getDB();
+
+  const rideRes = db.exec(
+    `SELECT
+        r.id, r.owner_id, r.origin, r.destination, r.date,
+        r.depart_time, r.arrive_time, r.seats, r.trip_type, r.km, r.created_at,
+        u.name, u.email, u.role
+     FROM rides r
+     JOIN users u ON u.id = r.owner_id
+     WHERE r.id = $id`,
+    { $id: rideId }
+  );
+
+  if (!rideRes.length || !rideRes[0].values.length) return null;
+  const row = rideRes[0].values[0];
+  const [
+    id,
+    owner_id,
+    origin,
+    destination,
+    date,
+    depart_time,
+    arrive_time,
+    seats,
+    trip_type,
+    km,
+    created_at,
+    owner_name,
+    owner_email,
+    owner_role,
+  ] = row;
+
+  const passengersRes = db.exec(
+    `SELECT p.user_id, p.status, u.name, u.email
+     FROM ride_passengers p
+     JOIN users u ON u.id = p.user_id
+     WHERE p.ride_id = $id
+     ORDER BY u.name ASC`,
+    { $id: rideId }
+  );
+
+  const passengers = passengersRes.length
+    ? passengersRes[0].values.map(
+        ([user_id, status, name, email]) => ({
+          userId: user_id,
+          status,
+          name,
+          email,
+        })
+      )
+    : [];
+
+  return {
+    id,
+    owner: {
+      id: owner_id,
+      name: owner_name,
+      email: owner_email,
+      role: owner_role,
+    },
+    origin,
+    destination,
+    date,
+    departTime: depart_time,
+    arriveTime: arrive_time,
+    seats,
+    tripType: trip_type,
+    km,
+    createdAt: created_at,
+    passengers,
+  };
+}
+
+/** Post a message into a ride's group chat */
+export async function postRideMessage(rideId, senderId, body) {
+  const trimmed = String(body || "").trim();
+  if (!trimmed) return null;
+
+  const db = await getDB();
+  db.run(
+    `INSERT INTO ride_messages (ride_id, sender_id, body)
+     VALUES ($ride_id, $sender_id, $body)`,
+    {
+      $ride_id: rideId,
+      $sender_id: senderId,
+      $body: trimmed,
+    }
+  );
+  _persist();
+
+  const res = db.exec(
+    `SELECT m.id, m.ride_id, m.sender_id, m.body, m.created_at,
+            u.name, u.email
+     FROM ride_messages m
+     JOIN users u ON u.id = m.sender_id
+     WHERE m.ride_id = $ride_id
+     ORDER BY m.created_at DESC, m.id DESC
+     LIMIT 1`,
+    { $ride_id: rideId }
+  );
+
+  if (!res.length || !res[0].values.length) return null;
+  const [id, rId, sId, msgBody, createdAt, name, email] = res[0].values[0];
+  return {
+    id,
+    rideId: rId,
+    senderId: sId,
+    senderName: name,
+    senderEmail: email,
+    body: msgBody,
+    createdAt,
+  };
+}
+
+/** List all messages for a ride (oldest first) */
+export async function listRideMessages(rideId) {
+  const db = await getDB();
+  const res = db.exec(
+    `SELECT m.id, m.ride_id, m.sender_id, m.body, m.created_at,
+            u.name, u.email
+     FROM ride_messages m
+     JOIN users u ON u.id = m.sender_id
+     WHERE m.ride_id = $ride_id
+     ORDER BY m.created_at ASC, m.id ASC`,
+    { $ride_id: rideId }
+  );
+
+  if (!res.length) return [];
+  return res[0].values.map(
+    ([id, rId, sId, body, createdAt, name, email]) => ({
+      id,
+      rideId: rId,
+      senderId: sId,
+      senderName: name,
+      senderEmail: email,
+      body,
+      createdAt,
+    })
+  );
+}
+
+/** Mark all messages in this ride as read for the given user */
+export async function markRideMessagesRead(rideId, userId) {
+  const db = await getDB();
+  const existing = db.exec(
+    `SELECT last_read_at
+     FROM ride_message_reads
+     WHERE ride_id = $ride AND user_id = $user`,
+    { $ride: rideId, $user: userId }
+  );
+
+  if (!existing.length || !existing[0].values.length) {
+    db.run(
+      `INSERT INTO ride_message_reads (ride_id, user_id, last_read_at)
+       VALUES ($ride, $user, datetime('now'))`,
+      { $ride: rideId, $user: userId }
+    );
+  } else {
+    db.run(
+      `UPDATE ride_message_reads
+       SET last_read_at = datetime('now')
+       WHERE ride_id = $ride AND user_id = $user`,
+      { $ride: rideId, $user: userId }
+    );
+  }
+  _persist();
+}
+
+/** Total unread chat messages across all rides the user is part of */
+export async function countUnreadMessages(userId) {
+  const db = await getDB();
+
+  const res = db.exec(
+    `
+    SELECT COUNT(*)
+    FROM ride_messages m
+    JOIN rides r ON r.id = m.ride_id
+    WHERE
+      -- user is driver OR accepted passenger
+      (
+        r.owner_id = $uid
+        OR EXISTS (
+          SELECT 1 FROM ride_passengers p
+          WHERE p.ride_id = r.id
+            AND p.user_id = $uid
+            AND p.status = 'accepted'
+        )
+      )
+      -- don't count your own messages
+      AND m.sender_id <> $uid
+      -- and only those after your last_read_at for that ride
+      AND (
+        NOT EXISTS (
+          SELECT 1 FROM ride_message_reads rr
+          WHERE rr.ride_id = m.ride_id AND rr.user_id = $uid
+        )
+        OR m.created_at > (
+          SELECT rr.last_read_at
+          FROM ride_message_reads rr
+          WHERE rr.ride_id = m.ride_id AND rr.user_id = $uid
+        )
+      )
+    `,
+    { $uid: userId }
+  );
+
+  if (!res.length || !res[0].values.length) return 0;
+  return Number(res[0].values[0][0]) || 0;
+}
+
+/** Threads for Inbox: one per ride that has messages for this user */
+export async function listInboxThreadsForUser(userId) {
+  const db = await getDB();
+
+  // Rides where user is driver or accepted passenger
+  const ridesRes = db.exec(
+    `
+    SELECT DISTINCT r.id, r.origin, r.destination, r.date, r.depart_time
+    FROM rides r
+    LEFT JOIN ride_passengers p ON p.ride_id = r.id
+    WHERE r.owner_id = $uid
+       OR (p.user_id = $uid AND p.status = 'accepted')
+    ORDER BY r.date ASC, r.depart_time ASC
+    `,
+    { $uid: userId }
+  );
+
+  if (!ridesRes.length) return [];
+
+  const threads = [];
+  for (const [rideId, origin, destination, date, depart_time] of ridesRes[0]
+    .values) {
+    // last message
+    const lastRes = db.exec(
+      `
+      SELECT m.id, m.body, m.created_at, u.name, u.email, m.sender_id
+      FROM ride_messages m
+      JOIN users u ON u.id = m.sender_id
+      WHERE m.ride_id = $ride
+      ORDER BY m.created_at DESC, m.id DESC
+      LIMIT 1
+      `,
+      { $ride: rideId }
+    );
+
+    if (!lastRes.length || !lastRes[0].values.length) {
+      // No messages yet for this ride -> skip from Inbox
+      continue;
+    }
+
+    const [
+      lastId,
+      lastBody,
+      lastCreatedAt,
+      lastName,
+      lastEmail,
+      lastSenderId,
+    ] = lastRes[0].values[0];
+
+    // unread for this ride
+    const unreadRes = db.exec(
+      `
+      SELECT COUNT(*)
+      FROM ride_messages m
+      WHERE m.ride_id = $ride
+        AND m.sender_id <> $uid
+        AND (
+          NOT EXISTS (
+            SELECT 1 FROM ride_message_reads rr
+            WHERE rr.ride_id = m.ride_id AND rr.user_id = $uid
+          )
+          OR m.created_at > (
+            SELECT rr.last_read_at
+            FROM ride_message_reads rr
+            WHERE rr.ride_id = m.ride_id AND rr.user_id = $uid
+          )
+        )
+      `,
+      { $ride: rideId, $uid: userId }
+    );
+
+    const unread = unreadRes.length ? Number(unreadRes[0].values[0][0]) || 0 : 0;
+
+    threads.push({
+      rideId,
+      origin,
+      destination,
+      date,
+      departTime: depart_time,
+      lastMessage: {
+        id: lastId,
+        body: lastBody,
+        createdAt: lastCreatedAt,
+        senderId: lastSenderId,
+        senderName: lastName,
+        senderEmail: lastEmail,
+      },
+      unread,
+    });
+  }
+
+  // Newest activity first
+  threads.sort((a, b) =>
+    a.lastMessage.createdAt < b.lastMessage.createdAt ? 1 : -1
+  );
+  return threads;
+}
+
