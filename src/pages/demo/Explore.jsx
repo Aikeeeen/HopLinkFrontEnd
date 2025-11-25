@@ -13,7 +13,7 @@ export default function Explore() {
   const [fallback, setFallback] = useState([]);
 
   const load = useCallback(async () => {
-    const excludeOwner = !!user && user.role === "passenger";
+    const excludeOwner = !!user;
 
     const rows = await listAllRidesForBrowse(
       { ...filters, excludeOwner, showFull: false },
@@ -80,7 +80,7 @@ export default function Explore() {
   };
 
   const canJoin = (r) =>
-    !!user && user.role === "passenger" && user.id !== r.ownerId;
+    !!user && user.id !== r.ownerId; 
 
   const renderList = (list) => (
     <div className="grid gap-4">
@@ -92,7 +92,7 @@ export default function Explore() {
           joinedStatus={r.joinedStatus}
           onJoin={handleJoin}
           onLeave={handleLeave}
-          onOpen={handleOpenRide} // NEW
+          onOpen={handleOpenRide}
         />
       ))}
     </div>

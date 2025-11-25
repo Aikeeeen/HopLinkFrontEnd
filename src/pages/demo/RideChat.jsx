@@ -11,6 +11,7 @@ import { useAuth } from "../../context/AuthContext";
 
 import MobileChat from "../../components/chat/MobileChat";
 import DesktopChat from "../../components/chat/DesktopChat";
+import { userIsRideMember } from "../../lib/rideAccess";
 
 export default function RideChat() {
   const { rideId } = useParams();
@@ -116,6 +117,20 @@ export default function RideChat() {
     return (
       <div className="hl-page">
         <p className="hl-body">Ride not found.</p>
+      </div>
+    );
+  }
+
+  // 🔐 Only owner or accepted passengers may access chat
+  if (!userIsRideMember(ride, userId)) {
+    return (
+      <div className="hl-page p-4">
+        <div className="hl-card p-4">
+          <p className="hl-body">
+            You don&apos;t have access to this ride&apos;s chat. Only the driver
+            and passengers who have joined this ride can view or send messages.
+          </p>
+        </div>
       </div>
     );
   }

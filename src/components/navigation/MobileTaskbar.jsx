@@ -14,6 +14,8 @@ export default function MobileTaskbar() {
   const pending = usePendingCount();
   const inboxUnread = useInboxUnreadCount();
 
+  const isDriver = user?.role === "driver";
+
   return (
     <div className="md:hidden">
       <nav
@@ -37,12 +39,7 @@ export default function MobileTaskbar() {
               <span>Explore</span>
             </NavLink>
 
-            <NavLink
-              to="/demo"
-              end
-              className={navClass}
-              aria-label="Home"
-            >
+            <NavLink to="/demo" end className={navClass} aria-label="Home">
               <Home className="h-5 w-5" />
               <span>Home</span>
             </NavLink>
@@ -50,7 +47,7 @@ export default function MobileTaskbar() {
 
           {/* Center FAB */}
           <button
-            aria-label="Create ride"
+            aria-label={isDriver ? "Create ride" : "My rides"}
             onClick={() => navigate("/demo/my-rides")}
             className="
               hl-bottom-nav-fab
@@ -69,7 +66,7 @@ export default function MobileTaskbar() {
             >
               <div className="relative">
                 <ClipboardList className="h-5 w-5" />
-                {user?.role === "driver" && pending > 0 && (
+                {isDriver && pending > 0 && (
                   <span className="absolute -top-1 -right-1 min-w-4 h-4 px-1 rounded-full bg-red-600 text-white text-[10px] leading-4 text-center">
                     {pending > 99 ? "99+" : pending}
                   </span>
@@ -78,11 +75,7 @@ export default function MobileTaskbar() {
               <span>Requests</span>
             </NavLink>
 
-            <NavLink
-              to="/demo/inbox"
-              className={navClass}
-              aria-label="Inbox"
-            >
+            <NavLink to="/demo/inbox" className={navClass} aria-label="Inbox">
               <div className="relative">
                 <Inbox className="h-5 w-5" />
                 {inboxUnread > 0 && (

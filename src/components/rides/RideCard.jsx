@@ -3,7 +3,17 @@ import RideDetailsGrid from "./RideDetailsGrid";
 import RideCardHeader from "./RideCardHeader";
 import OpenGroupChatButton from "./OpenGroupChatButton";
 
-export default function RideCard({ ride, ownerName, onDelete, onEdit, onOpen }) {
+export default function RideCard({
+  ride,
+  ownerName,
+  onDelete,
+  onEdit,
+  // new explicit handlers:
+  onOpenDetails,
+  onOpenChat,
+  // legacy fallback (will still work):
+  onOpen,
+}) {
   if (!ride) return null;
 
   const handleEditClick = (e) => {
@@ -16,9 +26,16 @@ export default function RideCard({ ride, ownerName, onDelete, onEdit, onOpen }) 
     if (onDelete) onDelete(ride);
   };
 
-  const handleOpenClick = (e) => {
+  const handleOpenDetailsClick = (e) => {
     e.stopPropagation();
-    if (onOpen) onOpen(ride);
+    const cb = onOpenDetails || onOpen;
+    if (cb) cb(ride);
+  };
+
+  const handleOpenChatClick = (e) => {
+    e.stopPropagation();
+    const cb = onOpenChat || onOpen;
+    if (cb) cb(ride);
   };
 
   const headerRightSlot = (
@@ -58,9 +75,27 @@ export default function RideCard({ ride, ownerName, onDelete, onEdit, onOpen }) 
         <p className="mt-2 text-xs hl-muted">Estimated {ride.km} km</p>
       )}
 
-      {onOpen && (
-        <div className="mt-3 flex justify-end">
-          <OpenGroupChatButton onClick={handleOpenClick} />
+      {(onOpenDetails || onOpen || onOpenChat) && (
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
+          <p className="text-xs hl-muted">
+            You are the driver for this ride.
+          </p>
+
+          <div className="flex flex-wrap gap-2">
+            {(onOpenDetails || onOpen) && (
+              <button
+                type="button"
+                onClick={handleOpenDetailsClick}
+                className="hl-btn-secondary px-4 py-2 text-xs"
+              >
+                View details
+              </button>
+            )}
+
+            {(onOpenChat || onOpen) && (
+              <OpenGroupChatButton onClick={handleOpenChatClick} />
+            )}
+          </div>
         </div>
       )}
     </div>

@@ -48,7 +48,7 @@ export default function Inbox() {
           Sign in with a demo account to see messages related to your rides.
         </p>
         <div className="hl-empty">
-          No messages yet — create or join a ride first.
+          No messages yet - create or join a ride first.
         </div>
       </div>
     );

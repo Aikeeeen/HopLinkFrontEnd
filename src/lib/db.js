@@ -123,6 +123,25 @@ function _bytesToB64(bytes) {
   return btoa(bin);
 }
 
+function _userIsRideMember(db, rideId, userId) {
+  if (!rideId || !userId) return false;
+
+  // Owner?
+  const owner = db.exec(
+    `SELECT 1 FROM rides WHERE id=$id AND owner_id=$uid`,
+    { $id: rideId, $uid: userId }
+  );
+  if (owner.length) return true;
+
+  // Accepted passenger?
+  const passenger = db.exec(
+    `SELECT 1 FROM ride_passengers WHERE ride_id=$id AND user_id=$uid AND status='accepted'`,
+    { $id: rideId, $uid: userId }
+  );
+
+  return passenger.length > 0;
+}
+
 /* ============ Users ============ */
 export async function createUser({ email, name, role, password }) {
   const db = await getDB();
@@ -560,6 +579,80 @@ export async function removeAcceptedPassenger(rideId, passengerId, driverId) {
   _persist();
 }
 
+export async function listJoinedRidesForUser(userId) {
+  const db = await getDB();
+
+  const res = db.exec(
+    `
+    SELECT
+      r.id,
+      r.owner_id,
+      r.origin,
+      r.destination,
+      r.date,
+      r.depart_time,
+      r.arrive_time,
+      r.seats,
+      r.trip_type,
+      r.km,
+      r.created_at,
+      u.name AS owner_name,
+      (
+        r.seats
+        - COALESCE(
+            (SELECT COUNT(*)
+             FROM ride_passengers p2
+             WHERE p2.ride_id = r.id AND p2.status = 'accepted'),
+            0
+          )
+      ) AS remaining
+    FROM ride_passengers p
+    JOIN rides r ON r.id = p.ride_id
+    JOIN users u ON u.id = r.owner_id
+    WHERE p.user_id = $uid AND p.status = 'accepted'
+    ORDER BY r.date ASC, r.depart_time ASC
+    `,
+    { $uid: userId }
+  );
+
+  if (!res.length) return [];
+
+  const rows = res[0].values;
+  return rows.map(
+    ([
+      id,
+      owner_id,
+      origin,
+      destination,
+      date,
+      depart_time,
+      arrive_time,
+      seats,
+      trip_type,
+      km,
+      created_at,
+      owner_name,
+      remaining,
+    ]) => ({
+      id,
+      ownerId: owner_id,
+      ownerName: owner_name,
+      origin,
+      destination,
+      date,
+      departTime: depart_time,
+      arriveTime: arrive_time,
+      seats,
+      tripType: trip_type,
+      km,
+      createdAt: created_at,
+      remaining,
+      joinedStatus: "accepted", // convenient for cards
+    })
+  );
+}
+
+
 /* ============ Ride detail + chat / inbox ============ */
 
 /** Full ride detail including driver + passengers */
@@ -643,6 +736,12 @@ export async function postRideMessage(rideId, senderId, body) {
   if (!trimmed) return null;
 
   const db = await getDB();
+
+  // Hard check: only owner or accepted passengers can post
+  if (!_userIsRideMember(db, rideId, senderId)) {
+    return null; // or throw new Error("Not allowed");
+  }
+
   db.run(
     `INSERT INTO ride_messages (ride_id, sender_id, body)
      VALUES ($ride_id, $sender_id, $body)`,
@@ -794,9 +893,10 @@ export async function listInboxThreadsForUser(userId) {
   if (!ridesRes.length) return [];
 
   const threads = [];
+
   for (const [rideId, origin, destination, date, depart_time] of ridesRes[0]
     .values) {
-    // last message
+    // last message (if any)
     const lastRes = db.exec(
       `
       SELECT m.id, m.body, m.created_at, u.name, u.email, m.sender_id
@@ -809,43 +909,57 @@ export async function listInboxThreadsForUser(userId) {
       { $ride: rideId }
     );
 
-    if (!lastRes.length || !lastRes[0].values.length) {
-      // No messages yet for this ride -> skip from Inbox
-      continue;
+    let lastMessage = null;
+
+    if (lastRes.length && lastRes[0].values.length) {
+      const [
+        lastId,
+        lastBody,
+        lastCreatedAt,
+        lastName,
+        lastEmail,
+        lastSenderId,
+      ] = lastRes[0].values[0];
+
+      lastMessage = {
+        id: lastId,
+        body: lastBody,
+        createdAt: lastCreatedAt,
+        senderId: lastSenderId,
+        senderName: lastName,
+        senderEmail: lastEmail,
+      };
     }
 
-    const [
-      lastId,
-      lastBody,
-      lastCreatedAt,
-      lastName,
-      lastEmail,
-      lastSenderId,
-    ] = lastRes[0].values[0];
-
-    // unread for this ride
-    const unreadRes = db.exec(
-      `
-      SELECT COUNT(*)
-      FROM ride_messages m
-      WHERE m.ride_id = $ride
-        AND m.sender_id <> $uid
-        AND (
-          NOT EXISTS (
-            SELECT 1 FROM ride_message_reads rr
-            WHERE rr.ride_id = m.ride_id AND rr.user_id = $uid
+    // unread count (only if there are messages)
+    let unread = 0;
+    if (lastMessage) {
+      const unreadRes = db.exec(
+        `
+        SELECT COUNT(*)
+        FROM ride_messages m
+        WHERE m.ride_id = $ride
+          AND m.sender_id <> $uid
+          AND (
+            NOT EXISTS (
+              SELECT 1 FROM ride_message_reads rr
+              WHERE rr.ride_id = m.ride_id AND rr.user_id = $uid
+            )
+            OR m.created_at > (
+              SELECT rr.last_read_at
+              FROM ride_message_reads rr
+              WHERE rr.ride_id = m.ride_id AND rr.user_id = $uid
+            )
           )
-          OR m.created_at > (
-            SELECT rr.last_read_at
-            FROM ride_message_reads rr
-            WHERE rr.ride_id = m.ride_id AND rr.user_id = $uid
-          )
-        )
-      `,
-      { $ride: rideId, $uid: userId }
-    );
+        `,
+        { $ride: rideId, $uid: userId }
+      );
 
-    const unread = unreadRes.length ? Number(unreadRes[0].values[0][0]) || 0 : 0;
+      unread =
+        unreadRes.length && unreadRes[0].values.length
+          ? Number(unreadRes[0].values[0][0]) || 0
+          : 0;
+    }
 
     threads.push({
       rideId,
@@ -853,22 +967,31 @@ export async function listInboxThreadsForUser(userId) {
       destination,
       date,
       departTime: depart_time,
-      lastMessage: {
-        id: lastId,
-        body: lastBody,
-        createdAt: lastCreatedAt,
-        senderId: lastSenderId,
-        senderName: lastName,
-        senderEmail: lastEmail,
-      },
+      lastMessage,
       unread,
     });
   }
 
-  // Newest activity first
-  threads.sort((a, b) =>
-    a.lastMessage.createdAt < b.lastMessage.createdAt ? 1 : -1
-  );
+  // Newest activity first:
+  // - rides with messages sorted by lastMessage.createdAt
+  // - rides with no messages fall back to date / departTime
+  threads.sort((a, b) => {
+    const aHasMsg = !!a.lastMessage;
+    const bHasMsg = !!b.lastMessage;
+
+    if (aHasMsg && bHasMsg) {
+      return a.lastMessage.createdAt < b.lastMessage.createdAt ? 1 : -1;
+    }
+    if (aHasMsg && !bHasMsg) return -1;
+    if (!aHasMsg && bHasMsg) return 1;
+
+    // neither has messages -> sort by date + time
+    const aKey = `${a.date || ""} ${a.departTime || ""}`;
+    const bKey = `${b.date || ""} ${b.departTime || ""}`;
+    return aKey < bKey ? -1 : 1;
+  });
+
   return threads;
 }
+
 

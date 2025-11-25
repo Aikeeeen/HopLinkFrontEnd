@@ -1,7 +1,6 @@
-import { Users, Hourglass } from "lucide-react";
+import { Users, Hourglass, ArrowRight } from "lucide-react";
 import RideDetailsGrid from "../rides/RideDetailsGrid";
 import RideCardHeader from "../rides/RideCardHeader";
-import OpenGroupChatButton from "../rides/OpenGroupChatButton";
 
 export default function BrowseRideCard({
   ride,
@@ -16,6 +15,9 @@ export default function BrowseRideCard({
   const isPending = joinedStatus === "pending";
   const isAccepted = joinedStatus === "accepted";
   const remaining = Number(ride.remaining ?? 0);
+
+  // Only accepted passengers can view ride details from browse
+  const canViewDetails = isAccepted;
 
   const seatColor =
     remaining <= 0
@@ -39,15 +41,12 @@ export default function BrowseRideCard({
   const handleOpenClick = (e) => {
     e.stopPropagation();
     if (!onOpen) return;
-    onOpen(ride);
+    onOpen(ride); // navigate to ride detail
   };
 
   const headerRightSlot = (
     <div className="flex flex-wrap items-center justify-end gap-1">
-      <span
-        className={`hl-badge-pill ${seatColor}`}
-        title="Seats remaining"
-      >
+      <span className={`hl-badge-pill ${seatColor}`} title="Seats remaining">
         <Users className="h-3.5 w-3.5" />
         {seatLabel}
       </span>
@@ -123,9 +122,17 @@ export default function BrowseRideCard({
           </div>
         )}
 
-        {/* View / chat (right) */}
-        {onOpen && (
-          <OpenGroupChatButton onClick={handleOpenClick} />
+        {/* View details (right) – only when actually joined */}
+        {onOpen && canViewDetails && (
+          <button
+            type="button"
+            onClick={handleOpenClick}
+            className="inline-flex items-center justify-center gap-1 hl-btn-secondary px-3 py-1.5 text-xs"
+          >
+            <span className="hidden sm:inline">View ride details</span>
+            <span className="sm:hidden">Details</span>
+            <ArrowRight className="h-3.5 w-3.5" />
+          </button>
         )}
       </div>
     </div>

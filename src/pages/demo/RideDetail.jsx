@@ -3,10 +3,15 @@ import { useNavigate, useParams, Link } from "react-router-dom";
 import { ArrowLeft, Car, MapPin, Clock, Users } from "lucide-react";
 import { getRideWithParticipants } from "../../lib/db";
 import OpenGroupChatButton from "../../components/rides/OpenGroupChatButton";
+import { useAuth } from "../../context/AuthContext";
+import { userIsRideMember } from "../../lib/rideAccess";
 
 export default function RideDetail() {
   const { rideId } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const userId = user?.id ?? null;
+
   const [ride, setRide] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -43,7 +48,7 @@ export default function RideDetail() {
 
   if (loading) {
     return (
-      <div className="hl-page">
+      <div className="hl-page p-4">
         <p className="hl-body">Loading ride details…</p>
       </div>
     );
@@ -51,8 +56,34 @@ export default function RideDetail() {
 
   if (!ride) {
     return (
-      <div className="hl-page">
+      <div className="hl-page p-4">
         <p className="hl-body">Ride not found.</p>
+      </div>
+    );
+  }
+
+  const isOwner = ride.owner.id === userId;
+  const isMember = userIsRideMember(ride, userId);
+
+  // Only owner or accepted passengers may view details
+  if (!isMember) {
+    return (
+      <div className="hl-page p-4">
+        <button
+          type="button"
+          onClick={() => navigate("/demo/explore")}
+          className="mb-4 inline-flex items-center gap-2 text-sm hl-link-muted"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to Explore
+        </button>
+
+        <div className="hl-card p-4">
+          <p className="hl-body">
+            You don&apos;t have access to this ride. Only the driver and
+            passengers who have joined this ride can view the details.
+          </p>
+        </div>
       </div>
     );
   }
@@ -62,7 +93,7 @@ export default function RideDetail() {
   );
 
   return (
-    <div className="hl-page">
+    <div className="hl-page p-4">
       <button
         type="button"
         onClick={() => navigate(-1)}
@@ -88,6 +119,11 @@ export default function RideDetail() {
                 {ride.date}
                 {ride.departTime ? ` · Depart ${ride.departTime}` : ""}
                 {ride.arriveTime ? ` · Arrive ${ride.arriveTime}` : ""}
+              </p>
+              <p className="mt-1 text-xs hl-muted">
+                {isOwner
+                  ? "You are the driver for this ride."
+                  : "You have joined this ride as a passenger."}
               </p>
             </div>
 
@@ -200,25 +236,25 @@ export default function RideDetail() {
 
         {/* Right: quick actions / meta */}
         <aside className="space-y-4">
-            <div className="hl-card p-4 space-y-3">
-                <p className="text-xs font-medium hl-muted uppercase tracking-wide">
-                Quick actions
-                </p>
+          <div className="hl-card p-4 space-y-3">
+            <p className="text-xs font-medium hl-muted uppercase tracking-wide">
+              Quick actions
+            </p>
 
-                <OpenGroupChatButton
-                onClick={() => navigate(`/demo/rides/${ride.id}/chat`)}
-                className="w-full justify-center"
-                showLabelOnMobile
-                variant="primary"
-                />
+            <OpenGroupChatButton
+              onClick={() => navigate(`/demo/rides/${ride.id}/chat`)}
+              className="w-full justify-center"
+              showLabelOnMobile
+              variant="primary"
+            />
 
-                <Link
-                to="/demo/my-rides"
-                className="text-xs hl-link-muted inline-flex items-center gap-1"
-                >
-                Manage this ride in My Rides
-                </Link>
-            </div>
+            <Link
+              to="/demo/my-rides"
+              className="text-xs hl-link-muted inline-flex items-center gap-1"
+            >
+              Manage this ride in My Rides
+            </Link>
+          </div>
 
           <div className="hl-card p-4 text-xs hl-body space-y-1.5">
             <p className="font-semibold hl-heading text-sm">Ride metadata</p>

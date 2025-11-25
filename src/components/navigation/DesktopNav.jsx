@@ -114,12 +114,14 @@ export default function DesktopNav() {
       { to: "/demo/settings", label: "Settings" },
       { to: "/demo/support", label: "Support" },
     ];
-  } else {
+    } else {
     // Passenger
     primary = [
       { to: "/demo", label: "Home", end: true },
       { to: "/demo/explore", label: "Explore" },
       { to: "/demo/inbox", label: "Inbox", showInboxBadge: true },
+      { to: "/demo/my-rides", label: "My Rides" },
+      { to: "/demo/requests", label: "Requests" }, // driver upsell page
     ];
     secondary = [
       { to: "/demo/history", label: "History" },
@@ -127,6 +129,8 @@ export default function DesktopNav() {
       { to: "/demo/support", label: "Support" },
     ];
   }
+
+
 
   return (
     <nav className="hidden md:flex items-center gap-2">

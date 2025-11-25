@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { MapPin, Calendar, Users, Filter } from "lucide-react";
 import cities from "../../data/cities.json";
+import DateField from "../ui/DateField";
+import SelectField from "../ui/SelectField";
 
 export default function RideFilter({ initial = {}, onSearch }) {
   const [origin, setOrigin] = useState(initial.origin || "");
@@ -18,7 +20,7 @@ export default function RideFilter({ initial = {}, onSearch }) {
           <label className="text-sm hl-body flex items-center gap-2">
             <MapPin className="h-4 w-4" /> From
           </label>
-          <select
+          <SelectField
             className="hl-input bg-white dark:bg-slate-900"
             value={origin}
             onChange={(e) => setOrigin(e.target.value)}
@@ -27,14 +29,14 @@ export default function RideFilter({ initial = {}, onSearch }) {
             {cities.map((c) => (
               <option key={c} value={c}>{c}</option>
             ))}
-          </select>
+          </SelectField>
         </div>
 
         <div className="flex flex-col gap-1 md:col-span-2">
           <label className="text-sm hl-body flex items-center gap-2">
             <MapPin className="h-4 w-4" /> To
           </label>
-          <select
+          <SelectField
             className="hl-input bg-white dark:bg-slate-900"
             value={destination}
             onChange={(e) => setDestination(e.target.value)}
@@ -43,16 +45,14 @@ export default function RideFilter({ initial = {}, onSearch }) {
             {cities.map((c) => (
               <option key={c} value={c}>{c}</option>
             ))}
-          </select>
+          </SelectField>
         </div>
 
         <div className="flex flex-col gap-1">
           <label className="text-sm hl-body flex items-center gap-2">
             <Calendar className="h-4 w-4" /> Date
           </label>
-          <input
-            type="date"
-            className="hl-input"
+          <DateField
             value={date}
             onChange={(e) => setDate(e.target.value)}
           />
@@ -62,7 +62,7 @@ export default function RideFilter({ initial = {}, onSearch }) {
           <label className="text-sm hl-body flex items-center gap-2">
             <Users className="h-4 w-4" /> Min seats
           </label>
-          <select
+          <SelectField
             className="hl-input bg-white dark:bg-slate-900"
             value={minSeats}
             onChange={(e) => setMinSeats(e.target.value)}
@@ -71,7 +71,7 @@ export default function RideFilter({ initial = {}, onSearch }) {
             {[1,2,3,4,5,6,7,8].map(n => (
               <option key={n} value={n}>{n}</option>
             ))}
-          </select>
+          </SelectField>
         </div>
 
         <div className="md:col-span-4" />

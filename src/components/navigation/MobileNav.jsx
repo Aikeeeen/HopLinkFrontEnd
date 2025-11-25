@@ -132,6 +132,13 @@ export default function MobileNav() {
       { to: "/demo", label: "Home", end: true, Icon: Home },
       { to: "/demo/history", label: "History", Icon: History },
       { to: "/demo/inbox", label: "Inbox", Icon: Inbox, showInboxBadge: true },
+      { to: "/demo/my-rides", label: "My Rides", Icon: ListChecks },
+      {
+        to: "/demo/requests",
+        label: "Requests",
+        Icon: ClipboardList,
+        showPendingBadge: false,
+      },
       { to: "/demo/settings", label: "Settings", Icon: Settings },
       { to: "/demo/support", label: "Support", Icon: LifeBuoy },
     ];
