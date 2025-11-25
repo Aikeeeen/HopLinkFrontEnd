@@ -1,3 +1,4 @@
+// src/layouts/RootLayout.jsx
 import { Outlet, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import Navbar from "../components/navigation/Navbar";
@@ -7,15 +8,17 @@ import DemoWarning from "../components/demo/DemoWarning";
 
 export default function RootLayout() {
   const { pathname } = useLocation();
-  const isChatRoute =
-    pathname.startsWith("/demo/rides/") && pathname.endsWith("/chat");
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
 
-  const rootClassName =
-    "min-h-screen h-screen overflow-hidden hl-page flex flex-col";
+  const isChatRoute =
+    pathname.startsWith("/demo/rides/") && pathname.endsWith("/chat");
+
+  const rootClassName = isChatRoute
+    ? "min-h-screen h-screen overflow-hidden hl-page flex flex-col"
+    : "min-h-screen hl-page flex flex-col";
 
   const mainClassName = isChatRoute
     ? "flex-1 flex w-full h-full overflow-hidden"
@@ -23,22 +26,22 @@ export default function RootLayout() {
 
   return (
     <div className={rootClassName}>
+      {/* Demo warning only on non-chat demo pages */}
       {!isChatRoute && <DemoWarning />}
 
-      {/* Always visible */}
       <Navbar />
 
       <main className={mainClassName}>
         <Outlet />
       </main>
 
+      {/* Footer only on larger screens and non-chat routes */}
       {!isChatRoute && (
         <div className="hidden md:block">
           <Footer />
         </div>
       )}
 
-      {/* Always visible at bottom on mobile */}
       <MobileTaskbar />
     </div>
   );
