@@ -9,7 +9,7 @@ export default function FinalCTA({ onTryDemo }) {
         </h2>
         <p className="mt-3 max-w-2xl text-sm hl-body sm:text-base">
           We’re building a safer, more structured alternative to Facebook carpool groups.  
-          No monetization, no commercial drivers — just trustworthy, clear intercity travel.  
+          No monetization, no commercial drivers. Just trustworthy, clear intercity travel.  
           Join the early access list and help shape HopLink before launch.
         </p>
 
@@ -32,7 +32,7 @@ export default function FinalCTA({ onTryDemo }) {
         </div>
 
         <p className="mt-3 max-w-sm text-xs hl-muted">
-          The demo runs locally in your browser — no real data is stored. The
+          The demo runs locally in your browser, so no real data is stored. The
           final app will include full safety, verification, and payment
           features.
         </p>

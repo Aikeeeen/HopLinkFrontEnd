@@ -31,7 +31,7 @@ export default function IntroSection() {
 
           <li className="flex items-start gap-2.5">
             <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500 dark:text-emerald-400" />
-            <span>Clear details and expectations — no messy DM negotiations.</span>
+            <span>Clear details and expectations, no messy DM negotiations.</span>
           </li>
 
           <li className="flex items-start gap-2.5">

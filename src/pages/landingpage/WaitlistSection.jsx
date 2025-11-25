@@ -26,13 +26,13 @@ export default function WaitlistSection() {
             Be first to know when HopLink launches
           </h2>
           <p className="mt-3 text-sm hl-body sm:text-base">
-            Leave your email and a bit about how you travel. We&apos;ll invite
+            Leave your email and a bit about how you travel. We'll invite
             you to early access, share progress updates, and ask for feedback as
             we build a safe, trustworthy, non-commercial way to share intercity
             rides across Eastern Europe.
           </p>
           <ul className="mt-4 space-y-1.5 text-xs hl-muted sm:text-sm">
-            <li>• No spam — just launch updates and testing invites.</li>
+            <li>• No spam: just launch updates and testing invites.</li>
             <li>• You can unsubscribe with one click at any time.</li>
           </ul>
         </div>
@@ -44,8 +44,8 @@ export default function WaitlistSection() {
                 You&apos;re on the list 🎉
               </p>
               <p className="mt-2 text-xs hl-muted">
-                Thanks for your interest in HopLink. We&apos;ll email you when
-                we&apos;re ready for early testers and city rollouts.
+                Thanks for your interest in HopLink. We'll email you when
+                we're ready for early testers and city rollouts.
               </p>
             </div>
           ) : (

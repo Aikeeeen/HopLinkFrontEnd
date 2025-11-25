@@ -17,7 +17,7 @@ const valueProps = [
     icon: MapPin,
     title: "Structured, reliable rides",
     description:
-      "A clear, organized alternative to chaotic Facebook groups — with verified profiles and transparent expectations.",
+      "A clear, organized alternative to chaotic Facebook groups with verified profiles and transparent expectations.",
   },
   {
     icon: Users,
@@ -46,7 +46,7 @@ export default function HeroSection() {
 
         <p className="mt-4 max-w-xl text-sm hl-body sm:text-base">
           HopLink connects drivers and passengers traveling the same route.  
-          Drivers can ask for a fair share of fuel costs — but the platform does not enable monetization.  
+          Drivers can ask for a fair share of fuel costs, but the platform does not enable monetization.  
           No gig drivers. No commercial incentives. Just trustworthy, verified travel between cities.
         </p>
 
@@ -64,7 +64,7 @@ export default function HeroSection() {
           </a>
 
           <p className="max-w-xs text-xs hl-muted">
-            Not a money-making platform — just a safe way to find reliable people going the same way.
+            Not a money-making platform, just a safe way to find reliable people going the same way.
           </p>
         </div>
 

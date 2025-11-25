@@ -5,7 +5,7 @@ const valueProps = [
     icon: ShieldCheck,
     title: "Built around trust",
     description:
-      "Verification options, transparent reviews, and a reliability score help you choose who to ride with — safely.",
+      "Verification options, transparent reviews, and a reliability score help you choose who to ride with. Safely.",
   },
   {
     icon: Scale,
@@ -28,7 +28,7 @@ export default function ValuePropositionSection() {
         Why people choose HopLink
       </h2>
       <p className="mt-3 text-center text-sm hl-body sm:text-base">
-        A safer, more structured way to share intercity rides — built on fairness,
+        A safer, more structured way to share intercity rides built on fairness,
         not monetization.
       </p>
 

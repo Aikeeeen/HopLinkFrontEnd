@@ -32,13 +32,13 @@ export default function FAQSection() {
             Questions, answered
           </h2>
           <p className="mt-3 text-sm hl-body sm:text-base">
-            HopLink is still in development, but here&apos;s what we can already
+            HopLink is still in development, but here's what we can already
             share about how it will work.
           </p>
           <div className="mt-4 flex items-center gap-2 text-xs hl-muted">
             <HelpCircle className="h-4 w-4" />
             <span>
-              Have a different question? You&apos;ll be able to reach us
+              Have a different question? You'll be able to reach us
               directly from the app once it launches.
             </span>
           </div>
