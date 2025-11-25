@@ -1,4 +1,4 @@
-import { ArrowRight, ShieldCheck, Users, MapPin } from "lucide-react";
+import { ArrowRight, ShieldCheck, Users, MapPin, Play } from "lucide-react";
 
 const heroStats = [
   { label: "Purpose", value: "Safe intercity travel" },
@@ -27,7 +27,14 @@ const valueProps = [
   },
 ];
 
-export default function HeroSection() {
+export default function HeroSection({ onOpenDemo }) {
+  const handleScrollToWaitlist = () => {
+    const el = document.getElementById("waitlist");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   return (
     <section className="flex flex-col gap-10 lg:flex-row lg:items-center lg:justify-between">
       {/* Left */}
@@ -45,26 +52,40 @@ export default function HeroSection() {
         </h1>
 
         <p className="mt-4 max-w-xl text-sm hl-body sm:text-base">
-          HopLink connects drivers and passengers traveling the same route.  
-          Drivers can ask for a fair share of fuel costs, but the platform does not enable monetization.  
-          No gig drivers. No commercial incentives. Just trustworthy, verified travel between cities.
+          HopLink connects drivers and passengers traveling the same route.
+          Drivers can ask for a fair share of fuel costs, but the platform does
+          not enable monetization. No gig drivers. No commercial incentives.
+          Just trustworthy, verified travel between cities.
         </p>
 
         <p className="mt-3 max-w-xl text-xs hl-muted sm:text-sm">
-          Join the early access list and we’ll notify you as soon as we launch in your area.
+          Join the early access list and we&apos;ll notify you as soon as we
+          launch in your area.
         </p>
 
         <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-end">
-          <a
-            href="#waitlist"
+          <button
+            type="button"
+            onClick={handleScrollToWaitlist}
             className="hl-btn-primary inline-flex items-center justify-center gap-2 rounded-2xl bg-emerald-500 px-5 py-2.5 text-sm font-medium text-slate-950 shadow-lg shadow-emerald-500/30 transition hover:bg-emerald-400"
           >
             <span>Join early access</span>
             <ArrowRight className="h-4 w-4" />
-          </a>
+          </button>
+
+          {/* Mobile-only demo button near the primary CTA */}
+          <button
+            type="button"
+            onClick={onOpenDemo}
+            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-300 px-4 py-2 text-xs font-medium hl-body hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-900 sm:hidden"
+          >
+            <Play className="h-4 w-4" />
+            <span>Try the demo</span>
+          </button>
 
           <p className="max-w-xs text-xs hl-muted">
-            Not a money-making platform, just a safe way to find reliable people going the same way.
+            Not a money-making platform, just a safe way to find reliable people
+            going the same way.
           </p>
         </div>
 

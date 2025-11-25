@@ -31,6 +31,7 @@ export default function LandingPage() {
           </button>
 
           <div className="flex items-center gap-3">
+            {/* Desktop / tablet demo button */}
             <button
               type="button"
               onClick={openDemo}
@@ -45,7 +46,7 @@ export default function LandingPage() {
 
       {/* Main marketing content */}
       <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
-        <HeroSection />
+        <HeroSection onOpenDemo={openDemo} />
         <HeadlineStrip />
         <IntroSection />
         <ValuePropositionSection />
