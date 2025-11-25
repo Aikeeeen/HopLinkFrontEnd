@@ -2,24 +2,24 @@ import { HelpCircle } from "lucide-react";
 
 const faqs = [
   {
-    question: "What is HopLink?",
+    question: "Do drivers make money on HopLink?",
     answer:
-      "HopLink is a carpooling platform that helps drivers and passengers share rides on regular routes like commuting or weekly trips.",
+      "No. Drivers can ask passengers to share fuel costs, but HopLink does not support monetization or profit-making. The platform is strictly non-commercial.",
   },
   {
-    question: "Is HopLink available in my city?",
+    question: "Is this like ride-hailing or taxis?",
     answer:
-      "We’re launching city by city. Join the waitlist, tell us your routes, and we’ll notify you once HopLink opens in your area.",
+      "No. HopLink only connects ordinary drivers and passengers taking the same intercity routes. No professional drivers, no on-demand rides, no commercial services.",
   },
   {
-    question: "How are costs split between riders?",
+    question: "How do you ensure safety?",
     answer:
-      "Drivers can set a fair contribution per seat based on distance and fuel costs. We’ll suggest balanced price ranges so it stays affordable.",
+      "We combine verification options, reliability scores, transparent reviews, and clear ride expectations to create a safer environment than Facebook groups.",
   },
   {
-    question: "Is it safe to share a ride?",
+    question: "Will HopLink be available in my area?",
     answer:
-      "Safety is our top priority. Profiles, ratings, and route details help you choose people you feel comfortable sharing a ride with.",
+      "We’re launching across Eastern Europe city-by-city. Join the early access list and we’ll notify you when we launch near you.",
   },
 ];
 
@@ -33,13 +33,13 @@ export default function FAQSection() {
           </h2>
           <p className="mt-3 text-sm hl-body sm:text-base">
             HopLink is still in development, but here&apos;s what we can already
-            share about how it works.
+            share about how it will work.
           </p>
           <div className="mt-4 flex items-center gap-2 text-xs hl-muted">
             <HelpCircle className="h-4 w-4" />
             <span>
               Have a different question? You&apos;ll be able to reach us
-              directly from the app.
+              directly from the app once it launches.
             </span>
           </div>
         </div>

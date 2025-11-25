@@ -2,22 +2,22 @@ import { Quote } from "lucide-react";
 
 const testimonials = [
   {
-    name: "Lena M.",
-    role: "Student commuter",
+    name: "Mila K.",
+    role: "Student, travels between cities",
     quote:
-      "I cut my monthly travel costs almost in half and actually enjoy the ride to campus now.",
+      "I used to spend hours scrolling Facebook groups. With HopLink, I just search, filter, and book a ride that feels safe.",
   },
   {
-    name: "Tom B.",
-    role: "Office worker",
+    name: "Daniel R.",
+    role: "Driver with a long commute",
     quote:
-      "HopLink made it easy to share my daily drive. No group chats, no chaos—just planned trips.",
+      "Sharing my usual route helps cover fuel and I get fewer no-shows because everything is confirmed in the app.",
   },
   {
-    name: "Sara & Alex",
-    role: "Co-riders",
+    name: "Jess & Marco",
+    role: "Travelers in Eastern Europe",
     quote:
-      "We started carpooling twice a week and it already feels like the new normal.",
+      "Having reviews and clear rules makes carpooling feel like a real option, not a gamble.",
   },
 ];
 
@@ -30,10 +30,7 @@ export default function SocialProofSection() {
 
       <div className="mt-6 grid gap-4 md:grid-cols-3">
         {testimonials.map((t) => (
-          <figure
-            key={t.name}
-            className="hl-card-soft p-4 flex h-full flex-col"
-          >
+          <figure key={t.name} className="hl-card-soft flex h-full flex-col p-4">
             <Quote className="h-4 w-4 text-emerald-600 dark:text-emerald-300" />
             <blockquote className="mt-3 text-sm hl-body">{t.quote}</blockquote>
             <figcaption className="mt-4 text-xs hl-muted">

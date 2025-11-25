@@ -8,55 +8,51 @@ export default function IntroSection() {
     >
       <div>
         <h2 className="text-2xl font-semibold tracking-tight hl-heading sm:text-3xl">
-          Carpooling without the friction
+          Carpooling that finally feels reliable
         </h2>
+
         <p className="mt-4 text-sm hl-body sm:text-base">
-          HopLink is built for people who travel the same routes again and again
-          — like commuting to work or going to campus. Instead of coordinating
-          in messy chats, you define your route, days, and preferences, and let
-          the platform suggest compatible drivers and passengers.
+          Instead of scrolling through chaotic Facebook groups or relying on
+          unpredictable buses, HopLink gives drivers and passengers a safe,
+          transparent way to coordinate intercity routes.
         </p>
+
         <p className="mt-3 text-sm hl-body sm:text-base">
-          Our goal is simple: help you share empty seats in cars that are
-          already on the road — so everyone spends less, emits less, and travels
-          with people they trust.
+          Drivers may ask passengers to contribute to fuel costs, but HopLink
+          does not allow monetization or profit-making.  
+          This keeps the platform fair, non-commercial, and focused on trust.
         </p>
 
         <ul className="mt-5 grid gap-3 text-sm hl-body">
           <li className="flex items-start gap-2.5">
             <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500 dark:text-emerald-400" />
-            <span>Works for recurring commutes and planned one-off trips.</span>
+            <span>Perfect for one-off trips and recurring intercity routes.</span>
           </li>
+
           <li className="flex items-start gap-2.5">
             <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500 dark:text-emerald-400" />
-            <span>
-              Clear visibility on time, route, seats, and contributions — no
-              awkward money talks.
-            </span>
+            <span>Clear details and expectations — no messy DM negotiations.</span>
           </li>
+
           <li className="flex items-start gap-2.5">
             <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500 dark:text-emerald-400" />
-            <span>
-              Built with trust in mind: profiles, preferences, and transparent
-              reviews.
-            </span>
+            <span>Verification, reliability scores, and reviews to build trust.</span>
           </li>
         </ul>
       </div>
 
-      {/* Right-hand mock card */}
       <div className="hl-card-soft p-4 shadow-lg shadow-emerald-500/10">
         <p className="text-xs font-medium text-emerald-700 dark:text-emerald-200">
-          Snapshot
+          Example
         </p>
         <p className="mt-1 text-sm hl-body">
-          A driver planning a weekday commute between Haarlem and Amsterdam
-          could:
+          A driver traveling from Sofia to Belgrade might:
         </p>
         <ul className="mt-3 space-y-2 text-xs hl-body">
-          <li>• Offer 3 seats on Mon–Thu, 08:00 → 17:30</li>
-          <li>• Set a fair contribution per seat</li>
-          <li>• Match with passengers along the route</li>
+          <li>• Offer 2–3 seats</li>
+          <li>• Ask riders to share fuel costs fairly</li>
+          <li>• Match with verified passengers</li>
+          <li>• Coordinate timing and pickup easily</li>
         </ul>
       </div>
     </section>

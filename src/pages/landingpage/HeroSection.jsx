@@ -1,68 +1,70 @@
-import { ArrowRight, Car, Users, Leaf } from "lucide-react";
+import { ArrowRight, ShieldCheck, Users, MapPin } from "lucide-react";
 
 const heroStats = [
-  { label: "Avg. saved / month", value: "€110" },
-  { label: "CO₂ reduced / trip", value: "up to 40%" },
-  { label: "Shared rides planned", value: "1,200+" },
+  { label: "Purpose", value: "Safe intercity travel" },
+  { label: "Region", value: "Eastern Europe" },
+  { label: "Focus", value: "Trust & reliability" },
 ];
 
 const valueProps = [
   {
-    icon: Car,
-    title: "Share empty seats, not extra cars",
+    icon: ShieldCheck,
+    title: "Trust over monetization",
     description:
-      "Turn your daily drive into a shared route. Split fuel and parking instead of adding more traffic.",
+      "Drivers may ask passengers to share fuel costs, but HopLink does not enable profit-making or commercial driving.",
   },
   {
-    icon: Leaf,
-    title: "Greener commutes by default",
+    icon: MapPin,
+    title: "Structured, reliable rides",
     description:
-      "Fewer cars on the road means lower emissions. Every ride is a small climate win.",
+      "A clear, organized alternative to chaotic Facebook groups — with verified profiles and transparent expectations.",
   },
   {
     icon: Users,
-    title: "Travel with people like you",
+    title: "Safety at the core",
     description:
-      "Neighbors, coworkers, and students heading in the same direction. HopLink connects you safely.",
+      "Verification, reviews, and reliability tracking reduce last-minute cancellations and unsafe situations.",
   },
 ];
 
-export default function HeroSection({ onTryDemo }) {
+export default function HeroSection() {
   return (
     <section className="flex flex-col gap-10 lg:flex-row lg:items-center lg:justify-between">
-      {/* Left: text */}
+      {/* Left */}
       <div className="max-w-2xl">
         <p className="hl-hero-kicker">
           <span className="h-2 w-2 rounded-full bg-emerald-400" />
-          Carpooling, but actually easy
+          Safe intercity carpooling, coming soon
         </p>
 
         <h1 className="mt-4 text-4xl font-bold tracking-tight hl-heading sm:text-5xl lg:text-6xl">
-          Share your commute,
+          A safer way to{" "}
           <span className="block text-emerald-600 dark:text-emerald-300">
-            save money every month.
+            share intercity rides.
           </span>
         </h1>
 
         <p className="mt-4 max-w-xl text-sm hl-body sm:text-base">
-          HopLink helps drivers and passengers match on routes they already take.
-          Split costs, reduce emissions, and skip the awkward “who&apos;s driving?”
-          chats.
+          HopLink connects drivers and passengers traveling the same route.  
+          Drivers can ask for a fair share of fuel costs — but the platform does not enable monetization.  
+          No gig drivers. No commercial incentives. Just trustworthy, verified travel between cities.
+        </p>
+
+        <p className="mt-3 max-w-xl text-xs hl-muted sm:text-sm">
+          Join the early access list and we’ll notify you as soon as we launch in your area.
         </p>
 
         <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-end">
-          <button
-            type="button"
-            onClick={onTryDemo}
-            className="hl-btn-primary rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-lg shadow-emerald-500/30"
+          <a
+            href="#waitlist"
+            className="hl-btn-primary inline-flex items-center justify-center gap-2 rounded-2xl bg-emerald-500 px-5 py-2.5 text-sm font-medium text-slate-950 shadow-lg shadow-emerald-500/30 transition hover:bg-emerald-400"
           >
-            <span>Try the live demo</span>
+            <span>Join early access</span>
             <ArrowRight className="h-4 w-4" />
-          </button>
+          </a>
 
           <p className="max-w-xs text-xs hl-muted">
-            Demo runs in your browser only — safe to click around, just don&apos;t
-            use real credentials.
+            Not a money-making platform — just a safe way to find reliable people going the same way.
           </p>
         </div>
 
@@ -81,10 +83,10 @@ export default function HeroSection({ onTryDemo }) {
         </dl>
       </div>
 
-      {/* Right: value props */}
+      {/* Right: value cards */}
       <div className="w-full max-w-sm space-y-4">
         {valueProps.map((item) => (
-          <div key={item.title} className="hl-card px-4 py-3 flex gap-3">
+          <div key={item.title} className="hl-card flex gap-3 px-4 py-3">
             <div className="mt-1 flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-500/15">
               <item.icon className="h-4 w-4 text-emerald-600 dark:text-emerald-300" />
             </div>

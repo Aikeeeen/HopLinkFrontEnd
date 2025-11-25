@@ -1,23 +1,23 @@
-import { Car, Users, Leaf } from "lucide-react";
+import { ShieldCheck, Users, Scale } from "lucide-react";
 
 const valueProps = [
   {
-    icon: Car,
-    title: "Share empty seats, not extra cars",
+    icon: ShieldCheck,
+    title: "Built around trust",
     description:
-      "Turn your daily drive into a shared route. Split fuel and parking instead of adding more traffic.",
+      "Verification options, transparent reviews, and a reliability score help you choose who to ride with — safely.",
   },
   {
-    icon: Leaf,
-    title: "Greener commutes by default",
+    icon: Scale,
+    title: "Fair cost sharing",
     description:
-      "Fewer cars on the road means lower emissions. Every ride is a small climate win.",
+      "Drivers can request a simple fuel contribution, but HopLink does not allow monetization. No gig economy, no profit motive.",
   },
   {
     icon: Users,
-    title: "Travel with people like you",
+    title: "No chaos, no uncertainty",
     description:
-      "Neighbors, coworkers, and students heading in the same direction. HopLink connects you safely.",
+      "Clear routes, timing, and expectations replace the frustration of messy Facebook carpool groups.",
   },
 ];
 
@@ -28,18 +28,15 @@ export default function ValuePropositionSection() {
         Why people choose HopLink
       </h2>
       <p className="mt-3 text-center text-sm hl-body sm:text-base">
-        A better way to move between the places you go most—without owning more
-        cars or buying more tickets.
+        A safer, more structured way to share intercity rides — built on fairness,
+        not monetization.
       </p>
 
       <div className="mt-8 grid gap-5 md:grid-cols-3">
         {valueProps.map((item) => {
           const Icon = item.icon;
           return (
-            <div
-              key={item.title}
-              className="hl-card-soft p-5 flex flex-col"
-            >
+            <div key={item.title} className="hl-card-soft flex flex-col p-5">
               <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-100 dark:bg-emerald-500/10">
                 <Icon className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
               </div>

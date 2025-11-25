@@ -7,6 +7,7 @@ import ValuePropositionSection from "./ValuePropositionSection";
 import SocialProofSection from "./SocialProofSection";
 import FAQSection from "./FAQSection";
 import FinalCTA from "./FinalCTA";
+import WaitlistSection from "./WaitlistSection";
 import ThemeToggle from "../../components/navigation/ThemeToggle";
 
 export default function LandingPage() {
@@ -44,12 +45,13 @@ export default function LandingPage() {
 
       {/* Main marketing content */}
       <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
-        <HeroSection onTryDemo={openDemo} />
+        <HeroSection />
         <HeadlineStrip />
         <IntroSection />
         <ValuePropositionSection />
         <SocialProofSection />
         <FAQSection />
+        <WaitlistSection />
         <FinalCTA onTryDemo={openDemo} />
       </div>
     </main>
