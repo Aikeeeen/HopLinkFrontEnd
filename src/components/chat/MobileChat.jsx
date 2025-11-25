@@ -19,11 +19,27 @@ export default function MobileChat({
   onBack,
 }) {
   const messagesRef = useRef(null);
+  const initialScrolledRef = useRef(false);
 
   useEffect(() => {
-    if (!messagesRef.current) return;
+    if (!messagesRef.current || !messages.length) return;
     const el = messagesRef.current;
-    el.scrollTop = el.scrollHeight;
+
+    if (!initialScrolledRef.current) {
+      el.scrollTop = el.scrollHeight;
+      initialScrolledRef.current = true;
+      return;
+    }
+
+    const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+    const isNearBottom = distanceFromBottom < 80;
+
+    if (!isNearBottom) return;
+
+    el.scrollTo({
+      top: el.scrollHeight,
+      behavior: "smooth",
+    });
   }, [messages.length]);
 
   if (!ride) return null;
