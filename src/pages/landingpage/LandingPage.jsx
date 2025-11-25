@@ -18,17 +18,6 @@ export default function LandingPage() {
 
   return (
     <main className="hl-page min-h-screen">
-      {/* Top demo banner */}
-      <div className="border-b border-amber-400/40 bg-amber-50 dark:bg-amber-500/10">
-        <div className="mx-auto flex max-w-6xl items-center justify-center px-4 py-2 text-xs text-amber-900 dark:text-amber-100 sm:text-sm">
-          <span className="mr-2 inline-block h-2 w-2 rounded-full bg-amber-300" />
-          <span>
-            HopLink is currently in <strong>demo mode</strong>. Data is stored
-            locally in your browser. Please don&apos;t use real passwords.
-          </span>
-        </div>
-      </div>
-
       {/* Simple landing navbar with theme toggle + demo button */}
       <header className="border-b border-slate-200/80 bg-white/80 backdrop-blur dark:border-slate-800 dark:bg-slate-950/80">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">

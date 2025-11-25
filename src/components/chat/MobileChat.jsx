@@ -21,104 +21,94 @@ export default function MobileChat({
   if (!ride) return null;
 
   return (
-    // Fill the height and width provided by RideChat / RootLayout
-    <div className="flex flex-col h-full w-full overflow-hidden">
-      {/* Header */}
-      <div className="flex items-center justify-between gap-3 mb-2 px-2 pt-2">
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={onBack}
-            className="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-2 py-1 text-xs hl-body hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:hover:bg-slate-800"
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </button>
-          <div>
-            <div className="flex items-center gap-1">
-              <MessageCircle className="h-4 w-4 text-indigo-600 dark:text-indigo-300" />
-              <h1 className="text-xs font-semibold hl-heading">
-                {ride.origin} → {ride.destination}
-              </h1>
-            </div>
-            <p className="text-[10px] hl-muted inline-flex items-center gap-1 mt-0.5">
-              <MapPin className="h-3 w-3" />
-              {ride.date}
-              {ride.departTime ? ` · ${ride.departTime}` : ""}
-            </p>
+    <div className="flex flex-col h-full w-full bg-slate-50 dark:bg-slate-900 overflow-hidden">
+
+      {/* HEADER — fixed */}
+      <div className="shrink-0 px-3 py-2 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 flex items-center gap-3 shadow-sm">
+        <button
+          onClick={onBack}
+          className="p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800"
+        >
+          <ArrowLeft className="h-5 w-5 text-slate-900 dark:text-slate-100" />
+        </button>
+
+        <div className="flex flex-col">
+          <div className="flex items-center gap-1">
+            <MessageCircle className="h-4 w-4 text-indigo-600 dark:text-indigo-300" />
+            <h1 className="text-sm font-semibold">
+              {ride.origin} → {ride.destination}
+            </h1>
           </div>
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 inline-flex items-center gap-1">
+            <MapPin className="h-3 w-3" />
+            {ride.date} {ride.departTime ? `· ${ride.departTime}` : ""}
+          </p>
         </div>
       </div>
 
-      {/* Chat area (no card edges) */}
-      <div className="flex-1 flex flex-col px-2 pb-2 pt-1 overflow-hidden">
-        <div className="flex-1 overflow-y-auto space-y-3 pr-1">
-          {messages.length === 0 ? (
-            <div className="h-full flex items-center justify-center">
-              <p className="text-xs hl-muted text-center px-4">
-                No messages yet. Be the first to say hi and coordinate the ride
-                details here.
-              </p>
-            </div>
-          ) : (
-            messages.map((m) => {
-              const mine = m.senderId === userId;
-              const sentAt =
-                m.createdAt || m.timestamp || m.sentAt || m.created_at;
-              const timeLabel = formatMessageTime(sentAt);
+      {/* MESSAGES — only this scrolls */}
+      <div className="flex-1 overflow-y-auto px-3 py-3 space-y-2">
+        {messages.map((m) => {
+          const mine = m.senderId === userId;
+          const sentAt =
+            m.createdAt || m.timestamp || m.sentAt || m.created_at;
+          const timeLabel = formatMessageTime(sentAt);
 
-              return (
-                <div
-                  key={m.id}
-                  className={`flex ${mine ? "justify-end" : "justify-start"}`}
-                >
-                  <div
-                    className={`max-w-[80%] rounded-2xl px-3 py-2 text-xs ${
-                      mine
-                        ? "bg-indigo-600 text-white rounded-br-sm"
-                        : "bg-slate-100 text-slate-900 rounded-bl-sm dark:bg-slate-800 dark:text-slate-50"
+          return (
+            <div
+              key={m.id}
+              className={`flex ${mine ? "justify-end" : "justify-start"}`}
+            >
+              <div
+                className={`px-3 py-2 rounded-2xl text-sm shadow-sm max-w-[80%] ${
+                  mine
+                    ? "bg-indigo-600 text-white rounded-br-sm"
+                    : "bg-white dark:bg-slate-800 dark:text-slate-100 rounded-bl-sm"
+                }`}
+              >
+                {!mine && (
+                  <p className="text-[10px] font-bold opacity-80 mb-0.5">
+                    {m.senderName || m.senderEmail}
+                  </p>
+                )}
+                <p className="whitespace-pre-wrap">{m.body}</p>
+                {timeLabel && (
+                  <p
+                    className={`text-[10px] mt-1 opacity-70 ${
+                      mine ? "text-right" : "text-left"
                     }`}
                   >
-                    {!mine && (
-                      <p className="text-[10px] font-semibold mb-0.5 opacity-80">
-                        {m.senderName || m.senderEmail}
-                      </p>
-                    )}
-                    <p className="whitespace-pre-wrap">{m.body}</p>
-                    {timeLabel && (
-                      <p
-                        className={`text-[9px] mt-1 opacity-70 ${
-                          mine ? "text-right" : "text-left"
-                        }`}
-                      >
-                        {timeLabel}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              );
-            })
-          )}
-          <div ref={bottomRef} />
-        </div>
+                    {timeLabel}
+                  </p>
+                )}
+              </div>
+            </div>
+          );
+        })}
 
-        {/* Input */}
-        <form
-          onSubmit={onSubmit}
-          className="mt-2 flex items-end gap-2 border-t border-slate-200 pt-2 dark:border-slate-700"
-        >
-          <textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={onKeyDown}
-            rows={1}
-            placeholder="Type a message…"
-            className="flex-1 hl-input resize-none min-h-10"
-          />
-          <button type="submit" className="hl-btn-primary px-3 py-2 text-xs">
-            Send
-          </button>
-        </form>
+        <div ref={bottomRef} />
       </div>
+
+      {/* INPUT BAR — fixed */}
+      <form
+        onSubmit={onSubmit}
+        className="shrink-0 border-t border-slate-200 dark:border-slate-700 p-2 bg-white dark:bg-slate-900 flex items-center gap-2"
+      >
+        <textarea
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={onKeyDown}
+          rows={1}
+          placeholder="Type a message…"
+          className="flex-1 resize-none p-2 bg-slate-100 dark:bg-slate-800 rounded-xl text-sm min-h-10"
+        />
+        <button
+          type="submit"
+          className="bg-indigo-600 text-white text-xs px-4 py-2 rounded-xl hover:bg-indigo-500"
+        >
+          Send
+        </button>
+      </form>
     </div>
   );
 }

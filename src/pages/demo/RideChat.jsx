@@ -47,10 +47,10 @@ export default function RideChat() {
           listRideMessages(rideIdNum),
         ]);
 
-        if (cancelled) return;
-
-        setRide(r);
-        setMessages(msgs);
+        if (!cancelled) {
+          setRide(r);
+          setMessages(msgs);
+        }
       } finally {
         if (!cancelled) {
           setLoading(false);
@@ -70,7 +70,7 @@ export default function RideChat() {
 
     return () => {
       cancelled = true;
-      if (unsub) unsub();
+      unsub?.();
     };
   }, [rideId]);
 
@@ -80,64 +80,37 @@ export default function RideChat() {
     }
 
     const rideIdNum = Number(rideId);
-    if (Number.isNaN(rideIdNum)) return;
-
-    hasMarkedReadRef.current = true;
-
-    markRideMessagesRead(rideIdNum, userId).catch(() => {
-      hasMarkedReadRef.current = false;
-    });
+    if (!Number.isNaN(rideIdNum)) {
+      hasMarkedReadRef.current = true;
+      markRideMessagesRead(rideIdNum, userId).catch(() => {
+        hasMarkedReadRef.current = false;
+      });
+    }
   }, [rideId, userId, messages.length]);
 
+  // ⭐ FIXED INITIAL SCROLL — Scroll AFTER messages render
   useEffect(() => {
-    if (bottomRef.current) {
-      bottomRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [messages.length]);
+    if (!messages.length) return;
 
-  if (!user) {
-    return (
-      <div className="hl-page">
-        <p className="hl-body">
-          Please sign in with a demo account to access ride chats.
-        </p>
-      </div>
-    );
-  }
+    const timer = setTimeout(() => {
+      bottomRef.current?.scrollIntoView({ behavior: "auto" });
+    }, 0); // allows DOM to fully paint before scrolling
 
-  if (loading && !ride) {
-    return (
-      <div className="hl-page">
-        <p className="hl-body">Loading ride chat…</p>
-      </div>
-    );
-  }
+    return () => clearTimeout(timer);
+  }, [messages]);
 
-  if (!ride) {
-    return (
-      <div className="hl-page">
-        <p className="hl-body">Ride not found.</p>
-      </div>
-    );
-  }
+  if (!user) return <p>Please sign in.</p>;
+  if (loading && !ride) return <p>Loading...</p>;
+  if (!ride) return <p>Ride not found.</p>;
 
-  // 🔐 Only owner or accepted passengers may access chat
   if (!userIsRideMember(ride, userId)) {
-    return (
-      <div className="hl-page p-4">
-        <div className="hl-card p-4">
-          <p className="hl-body">
-            You don&apos;t have access to this ride&apos;s chat. Only the driver
-            and passengers who have joined this ride can view or send messages.
-          </p>
-        </div>
-      </div>
-    );
+    return <p>Not allowed to view chat.</p>;
   }
 
   const sendMessage = async () => {
     const trimmed = input.trim();
-    if (!trimmed || !userId || !rideId) return;
+    if (!trimmed) return;
+    if (!rideId) return;
 
     const rideIdNum = Number(rideId);
     if (Number.isNaN(rideIdNum)) return;
@@ -148,9 +121,9 @@ export default function RideChat() {
     markRideMessagesRead(rideIdNum, userId).catch(() => {});
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    await sendMessage();
+    sendMessage();
   };
 
   const handleKeyDown = (e) => {
@@ -173,14 +146,20 @@ export default function RideChat() {
   };
 
   return (
-    <div className="flex-1 flex flex-col w-full">
+    <div className="flex-1 flex flex-col w-full h-full overflow-hidden">
+
       {/* Mobile */}
-      <div className="md:hidden flex-1 w-full">
+      <div
+        className="md:hidden flex flex-col w-full overflow-hidden"
+        style={{
+          height: "calc(100vh - 112px)", // navbar + taskbar space
+        }}
+      >
         <MobileChat {...sharedProps} />
       </div>
 
       {/* Desktop */}
-      <div className="hidden md:block flex-1 w-full">
+      <div className="hidden md:block flex-1 w-full h-full overflow-hidden">
         <DesktopChat {...sharedProps} />
       </div>
     </div>
