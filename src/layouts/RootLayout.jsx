@@ -1,4 +1,3 @@
-// src/layouts/RootLayout.jsx
 import { Outlet, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import Navbar from "../components/navigation/Navbar";
@@ -9,12 +8,13 @@ import DemoWarning from "../components/demo/DemoWarning";
 export default function RootLayout() {
   const { pathname } = useLocation();
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
-
   const isChatRoute =
     pathname.startsWith("/demo/rides/") && pathname.endsWith("/chat");
+
+  useEffect(() => {
+    if (isChatRoute) return;
+    window.scrollTo(0, 0);
+  }, [pathname, isChatRoute]);
 
   const rootClassName = isChatRoute
     ? "min-h-screen h-screen overflow-hidden hl-page flex flex-col"

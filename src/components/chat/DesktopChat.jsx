@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { ArrowLeft, MessageCircle, MapPin } from "lucide-react";
 
 function formatMessageTime(value) {
@@ -14,10 +15,17 @@ export default function DesktopChat({
   setInput,
   onSubmit,
   onKeyDown,
-  bottomRef,
   userId,
   onBack,
 }) {
+  const messagesRef = useRef(null);
+
+  useEffect(() => {
+    if (!messagesRef.current) return;
+    const el = messagesRef.current;
+    el.scrollTop = el.scrollHeight;
+  }, [messages.length]);
+
   if (!ride) return null;
 
   return (
@@ -48,13 +56,14 @@ export default function DesktopChat({
               </p>
             </div>
           </div>
-
-          {/* No "View ride details" link anymore */}
         </div>
 
         {/* Chat area */}
         <div className="flex-1 flex flex-col border border-slate-200 rounded-xl p-3 sm:p-4 overflow-hidden dark:border-slate-700">
-          <div className="flex-1 overflow-y-auto space-y-3 pr-1">
+          <div
+            ref={messagesRef}
+            className="flex-1 overflow-y-auto space-y-3 pr-1"
+          >
             {messages.length === 0 ? (
               <div className="h-full flex items-center justify-center">
                 <p className="text-xs hl-muted text-center px-4">
@@ -101,7 +110,6 @@ export default function DesktopChat({
                 );
               })
             )}
-            <div ref={bottomRef} />
           </div>
 
           {/* Input */}

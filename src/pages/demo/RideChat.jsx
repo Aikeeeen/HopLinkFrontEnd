@@ -24,7 +24,6 @@ export default function RideChat() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const bottomRef = useRef(null);
   const hasMarkedReadRef = useRef(false);
 
   useEffect(() => {
@@ -88,17 +87,6 @@ export default function RideChat() {
     }
   }, [rideId, userId, messages.length]);
 
-  // ⭐ FIXED INITIAL SCROLL — Scroll AFTER messages render
-  useEffect(() => {
-    if (!messages.length) return;
-
-    const timer = setTimeout(() => {
-      bottomRef.current?.scrollIntoView({ behavior: "auto" });
-    }, 0); // allows DOM to fully paint before scrolling
-
-    return () => clearTimeout(timer);
-  }, [messages]);
-
   if (!user) return <p>Please sign in.</p>;
   if (loading && !ride) return <p>Loading...</p>;
   if (!ride) return <p>Ride not found.</p>;
@@ -140,21 +128,14 @@ export default function RideChat() {
     setInput,
     onSubmit: handleSubmit,
     onKeyDown: handleKeyDown,
-    bottomRef,
     userId,
     onBack: () => navigate(-1),
   };
 
   return (
     <div className="flex-1 flex flex-col w-full h-full overflow-hidden">
-
       {/* Mobile */}
-      <div
-        className="md:hidden flex flex-col w-full overflow-hidden"
-        style={{
-          height: "calc(100vh - 112px)", // navbar + taskbar space
-        }}
-      >
+      <div className="md:hidden flex flex-col w-full flex-1 overflow-hidden">
         <MobileChat {...sharedProps} />
       </div>
 
