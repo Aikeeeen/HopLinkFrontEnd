@@ -5,7 +5,7 @@ export default function DemoWarning() {
         <span className="mr-2 inline-block h-2 w-2 rounded-full bg-amber-300" />
         <span>
           HopLink is currently in <strong>demo mode</strong>. Data is stored
-          locally in your browser. Please don&apos;t use real passwords.
+          locally in your browser. Please don't use real credentials.
         </span>
       </div>
     </div>
