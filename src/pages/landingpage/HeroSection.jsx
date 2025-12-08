@@ -63,7 +63,7 @@ export default function HeroSection({ onOpenDemo }) {
           launch in your area.
         </p>
 
-        <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-end">
+        <div className="mt-6 flex flex-col gap-3">
           <button
             type="button"
             onClick={handleScrollToWaitlist}
@@ -73,11 +73,10 @@ export default function HeroSection({ onOpenDemo }) {
             <ArrowRight className="h-4 w-4" />
           </button>
 
-          {/* Mobile-only demo button near the primary CTA */}
           <button
             type="button"
             onClick={onOpenDemo}
-            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-300 px-4 py-2 text-xs font-medium hl-body hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-900 sm:hidden"
+            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-300 px-4 py-2 text-sm font-medium hl-body hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-900"
           >
             <Play className="h-4 w-4" />
             <span>Try the demo</span>
