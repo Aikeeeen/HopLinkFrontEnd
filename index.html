@@ -5,6 +5,24 @@
     <link rel="icon" type="image/svg+xml" href="/linklogo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>HopLink Carpooling</title>
+    
+    <!-- Google tag (gtag.js) - Loaded but not tracking until consent -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-JBPZKM0Y6R"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      
+      // Deny by default for GDPR compliance
+      gtag('consent', 'default', {
+        'analytics_storage': 'denied',
+        'ad_storage': 'denied'
+      });
+      
+      gtag('config', 'G-JBPZKM0Y6R', {
+        'anonymize_ip': true
+      });
+    </script>
   </head>
   <body>
     <div id="root"></div>

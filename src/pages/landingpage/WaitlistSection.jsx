@@ -1,19 +1,99 @@
 import { Mail, User, MapPin } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { trackWaitlistSignup } from "../../lib/tracking";
 
 export default function WaitlistSection() {
   const [submitted, setSubmitted] = useState(false);
+  const [email, setEmail] = useState("");
+  const [route, setRoute] = useState("");
+  const [role, setRole] = useState("rider");
+  const [source, setSource] = useState("");
+  const [sourceDetail, setSourceDetail] = useState("");
+  const [priority, setPriority] = useState([]);
+  const [priorityOpen, setPriorityOpen] = useState(false);
+  const [consentChecked, setConsentChecked] = useState(false);
+  const priorityRef = useRef(null);
+
+  const isFormValid =
+    email.trim() &&
+    route.trim() &&
+    source &&
+    (source !== "other" || sourceDetail.trim()) &&
+    priority.length > 0 &&
+    consentChecked;
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // Validate and show specific error messages
+    if (!email.trim()) {
+      alert("Please enter your email address.");
+      return;
+    }
+    if (!route.trim()) {
+      alert("Please enter your typical city or route.");
+      return;
+    }
+    if (!source) {
+      alert("Please select how you heard about us.");
+      return;
+    }
+    if (source === "other" && !sourceDetail.trim()) {
+      alert("Please tell us where you heard about us.");
+      return;
+    }
+    if (priority.length === 0) {
+      alert("Please select at least one thing that matters most to you.");
+      return;
+    }
+    if (!consentChecked) {
+      alert("Please agree to receive emails to join the early access list.");
+      return;
+    }
+
     const formData = new FormData(e.currentTarget);
     const payload = Object.fromEntries(formData.entries());
 
+    payload.email = email.trim();
+    payload.route = route.trim();
+    payload.role = role;
+    payload.source = source;
+    payload.priority = priority;
+    payload.marketingConsent = consentChecked;
+
+    if (source !== "other") {
+      delete payload.sourceDetail;
+    } else {
+      payload.sourceDetail = sourceDetail;
+    }
+
     console.log("Waitlist signup:", payload);
 
+    // Track the waitlist signup in Google Analytics
+    trackWaitlistSignup(source, role);
+
     setSubmitted(true);
+    setEmail("");
+    setRoute("");
+    setRole("rider");
+    setSource("");
+    setSourceDetail("");
+    setPriority([]);
+    setPriorityOpen(false);
+    setConsentChecked(false);
     e.currentTarget.reset();
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (priorityOpen && priorityRef.current && !priorityRef.current.contains(event.target)) {
+        setPriorityOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [priorityOpen]);
 
   return (
     <section
@@ -57,7 +137,7 @@ export default function WaitlistSection() {
                 >
                   Email address
                 </label>
-                <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-700 dark:bg-slate-900">
+                <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 min-h-11 dark:border-slate-700 dark:bg-slate-900">
                   <Mail className="h-4 w-4 text-slate-400" />
                   <input
                     id="email"
@@ -65,13 +145,15 @@ export default function WaitlistSection() {
                     type="email"
                     required
                     placeholder="you@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     className="w-full bg-transparent text-sm outline-none hl-body placeholder:text-slate-400"
                   />
                 </div>
               </div>
 
-              <div className="grid gap-3 sm:grid-cols-2">
-                <div className="space-y-1.5 text-sm">
+              <div className="grid gap-3 sm:grid-cols-2 sm:items-start">
+                <div className="space-y-2 text-sm">
                   <label className="block text-xs font-medium hl-muted uppercase tracking-wide">
                     I&apos;m mainly a…
                   </label>
@@ -81,10 +163,11 @@ export default function WaitlistSection() {
                         type="radio"
                         name="role"
                         value="rider"
-                        defaultChecked
+                        checked={role === "rider"}
+                        onChange={() => setRole("rider")}
                         className="peer hidden"
                       />
-                      <div className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-center hl-body peer-checked:border-emerald-500 peer-checked:bg-emerald-50 dark:border-slate-700 dark:bg-slate-900 dark:peer-checked:border-emerald-500 dark:peer-checked:bg-emerald-500/10">
+                      <div className="flex min-h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-center hl-body peer-checked:border-emerald-500 peer-checked:bg-emerald-50 dark:border-slate-700 dark:bg-slate-900 dark:peer-checked:border-emerald-500 dark:peer-checked:bg-emerald-500/10">
                         Passenger
                       </div>
                     </label>
@@ -93,33 +176,165 @@ export default function WaitlistSection() {
                         type="radio"
                         name="role"
                         value="driver"
+                        checked={role === "driver"}
+                        onChange={() => setRole("driver")}
                         className="peer hidden"
                       />
-                      <div className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-center hl-body peer-checked:border-emerald-500 peer-checked:bg-emerald-50 dark:border-slate-700 dark:bg-slate-900 dark:peer-checked:border-emerald-500 dark:peer-checked:bg-emerald-500/10">
+                      <div className="flex min-h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-center hl-body peer-checked:border-emerald-500 peer-checked:bg-emerald-50 dark:border-slate-700 dark:bg-slate-900 dark:peer-checked:border-emerald-500 dark:peer-checked:bg-emerald-500/10">
                         Driver
                       </div>
                     </label>
                   </div>
                 </div>
 
-                <div className="space-y-1.5 text-sm">
+                <div className="space-y-2 text-sm">
                   <label
                     htmlFor="route"
                     className="block text-xs font-medium hl-muted uppercase tracking-wide"
                   >
                     Typical city or route
                   </label>
-                  <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-700 dark:bg-slate-900">
+                  <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 min-h-11 dark:border-slate-700 dark:bg-slate-900">
                     <MapPin className="h-4 w-4 text-slate-400" />
                     <input
                       id="route"
                       name="route"
                       type="text"
                       placeholder="e.g. Sofia → Bucharest"
+                      required
+                      value={route}
+                      onChange={(e) => setRoute(e.target.value)}
                       className="w-full bg-transparent text-sm outline-none hl-body placeholder:text-slate-400"
                     />
                   </div>
                 </div>
+              </div>
+
+              <div className="space-y-1.5 text-sm">
+                <label
+                  htmlFor="source"
+                  className="block text-xs font-medium hl-muted uppercase tracking-wide"
+                >
+                  How did you hear about us?
+                </label>
+                <div className="relative">
+                  <select
+                    id="source"
+                    name="source"
+                    value={source}
+                    className="w-full appearance-none rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 min-h-11 text-sm hl-body outline-none hover:border-slate-300 focus:border-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:hover:border-slate-600 dark:focus:border-emerald-500"
+                    required
+                    onChange={(e) => setSource(e.target.value)}
+                  >
+                    <option value="" disabled>
+                      Select one
+                    </option>
+                    <option value="facebook">Facebook groups</option>
+                    <option value="instagram">Instagram</option>
+                    <option value="tiktok">TikTok</option>
+                    <option value="google">Google search</option>
+                    <option value="friend">Friend recommendation</option>
+                    <option value="community">University / workplace community</option>
+                    <option value="offline">Posters / offline</option>
+                    <option value="other">Other</option>
+                  </select>
+                  <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-xs text-slate-500">▾</span>
+                </div>
+                {source === "other" && (
+                  <input
+                    type="text"
+                    name="sourceDetail"
+                    value={sourceDetail}
+                    onChange={(e) => setSourceDetail(e.target.value)}
+                    placeholder="Please specify..."
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 min-h-11 text-sm hl-body outline-none placeholder:text-slate-400 hover:border-slate-300 focus:border-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:placeholder:text-slate-500 dark:hover:border-slate-600 dark:focus:border-emerald-500"
+                  />
+                )}
+              </div>
+
+              <div className="space-y-2 text-sm" ref={priorityRef}>
+                <p className="block text-xs font-medium hl-muted uppercase tracking-wide">
+                  What matters most for you? (pick all that apply)
+                </p>
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setPriorityOpen((v) => !v)}
+                    className="flex w-full items-center justify-between rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 min-h-11 text-sm hl-body hover:border-slate-300 focus:border-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:hover:border-slate-600 dark:focus:border-emerald-500"
+                  >
+                    <span className="text-left">
+                      {priority.length === 0 ? "Select one or more" : `${priority.length} selected`}
+                    </span>
+                    <span className="text-xs text-slate-500">▾</span>
+                  </button>
+
+                  {priorityOpen && (
+                    <div className="mt-2 grid gap-2 rounded-xl border border-slate-200 bg-white p-2 shadow-lg dark:border-slate-700 dark:bg-slate-900">
+                      {[
+                        { value: "fill_seats", label: "Fill seats reliably" },
+                        { value: "safety_trust", label: "Safer than FB groups" },
+                        { value: "clear_pricing", label: "Clear & fair pricing" },
+                        { value: "low_fees", label: "Low fees / costs" },
+                        { value: "fast_comm", label: "Fast communication" },
+                        { value: "other", label: "Something else" },
+                      ].map((item) => {
+                        const active = priority.includes(item.value);
+                        return (
+                          <button
+                            key={item.value}
+                            type="button"
+                            onClick={() => {
+                              setPriority((prev) =>
+                                prev.includes(item.value)
+                                  ? prev.filter((v) => v !== item.value)
+                                  : [...prev, item.value]
+                              );
+                            }}
+                            className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs hl-body transition hover:bg-slate-50 dark:hover:bg-slate-800 ${
+                              active
+                                ? "border border-emerald-400/70 bg-emerald-50 text-emerald-700 dark:border-emerald-500/60 dark:bg-emerald-500/10 dark:text-emerald-200"
+                                : "border border-transparent"
+                            }`}
+                          >
+                            <span>{item.label}</span>
+                            {active && <span className="text-[10px] font-medium">Added</span>}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+
+                {priority.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {priority.map((p) => {
+                      const labelMap = {
+                        fill_seats: "Fill seats reliably",
+                        safety_trust: "Safer than FB groups",
+                        clear_pricing: "Clear & fair pricing",
+                        low_fees: "Low fees / costs",
+                        fast_comm: "Fast communication",
+                        other: "Something else",
+                      };
+                      return (
+                        <span
+                          key={p}
+                          className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-[11px] font-medium text-slate-700 dark:bg-slate-800 dark:text-slate-200"
+                        >
+                          {labelMap[p] ?? p}
+                          <button
+                            type="button"
+                            aria-label="Remove priority"
+                            className="text-slate-500 hover:text-slate-700 dark:hover:text-slate-100"
+                            onClick={() => setPriority((prev) => prev.filter((v) => v !== p))}
+                          >
+                            ×
+                          </button>
+                        </span>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
 
               <div className="space-y-1.5 text-xs hl-muted">
@@ -127,8 +342,9 @@ export default function WaitlistSection() {
                   <input
                     type="checkbox"
                     name="marketingConsent"
+                    checked={consentChecked}
+                    onChange={(e) => setConsentChecked(e.target.checked)}
                     className="mt-0.5 h-3.5 w-3.5 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 dark:border-slate-600"
-                    defaultChecked
                   />
                   <span>
                     I agree to receive emails about the HopLink beta, launch
@@ -140,7 +356,7 @@ export default function WaitlistSection() {
 
               <button
                 type="submit"
-                className="hl-btn-primary flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 px-4 py-2.5 text-sm font-medium text-slate-950 shadow-lg shadow-emerald-500/30 transition hover:bg-emerald-400"
+                className="hl-btn-primary flex w-full items-center justify-center gap-2 rounded-2xl px-3.5 py-2 min-h-11 text-sm font-medium text-slate-950 shadow-md shadow-emerald-500/25 transition bg-emerald-500 hover:bg-emerald-400"
               >
                 <User className="h-4 w-4" />
                 <span>Join the early access list</span>

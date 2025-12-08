@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { trackDemoAction } from "../../lib/tracking";
 
 import HeroSection from "./HeroSection";
 import HeadlineStrip from "./HeadlineStrip";
@@ -14,6 +15,7 @@ export default function LandingPage() {
   const navigate = useNavigate();
 
   const openDemo = () => {
+    trackDemoAction("open_demo");
     window.open("/demo", "_blank", "noopener,noreferrer");
   };
 
