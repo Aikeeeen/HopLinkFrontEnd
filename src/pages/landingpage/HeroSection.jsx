@@ -27,7 +27,7 @@ const valueProps = [
   },
 ];
 
-export default function HeroSection({ onOpenDemo }) {
+export default function HeroSection() {
   const handleScrollToWaitlist = () => {
     const el = document.getElementById("waitlist");
     if (el) {
@@ -73,14 +73,15 @@ export default function HeroSection({ onOpenDemo }) {
             <ArrowRight className="h-4 w-4" />
           </button>
 
-          <button
-            type="button"
-            onClick={onOpenDemo}
+          <a
+            href="/demo"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-300 px-5 py-2.5 text-sm font-medium hl-body transition hover:bg-emerald-50 hover:border-emerald-400 dark:border-slate-700 dark:hover:bg-emerald-950/30 dark:hover:border-emerald-600"
           >
             <Play className="h-4 w-4" />
             <span>Try the demo</span>
-          </button>
+          </a>
 
           <p className="max-w-xs text-xs hl-muted">
             Not a money-making platform, just a safe way to find reliable people
