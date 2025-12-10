@@ -1,5 +1,7 @@
 import { Mail, User, MapPin } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { Toaster, toast } from "react-hot-toast";
+import confetti from "canvas-confetti";
 import { trackWaitlistSignup } from "../../lib/tracking";
 
 export default function WaitlistSection() {
@@ -19,27 +21,27 @@ export default function WaitlistSection() {
 
     // Validate and show specific error messages
     if (!email.trim()) {
-      alert("Please enter your email address.");
+      toast.error("Please enter your email address.");
       return;
     }
     if (!route.trim()) {
-      alert("Please enter your typical city or route.");
+      toast.error("Please enter your typical city or route.");
       return;
     }
     if (!source) {
-      alert("Please select how you heard about us.");
+      toast.error("Please select how you heard about us.");
       return;
     }
     if (source === "other" && !sourceDetail.trim()) {
-      alert("Please tell us where you heard about us.");
+      toast.error("Please tell us where you heard about us.");
       return;
     }
     if (priority.length === 0) {
-      alert("Please select at least one thing that matters most to you.");
+      toast.error("Please select at least one thing that matters most to you.");
       return;
     }
     if (!consentChecked) {
-      alert("Please agree to receive emails to join the early access list.");
+      toast.error("Please agree to receive emails to join the early access list.");
       return;
     }
 
@@ -68,11 +70,24 @@ export default function WaitlistSection() {
       const response = await fetch("https://formspree.io/f/mwpgrqpa", {
         method: "POST",
         body: formData,
+        headers: {
+          "Accept": "application/json",
+        },
       });
 
       if (response.ok) {
         // Track the waitlist signup in Google Analytics
         trackWaitlistSignup(source, role);
+
+        // Show success toast
+        toast.success("🎉 You're on the list! Check your email for updates.");
+
+        // Trigger confetti
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 },
+        });
 
         setSubmitted(true);
         setEmail("");
@@ -85,11 +100,12 @@ export default function WaitlistSection() {
         setConsentChecked(false);
         e.currentTarget.reset();
       } else {
-        alert("Something went wrong. Please try again.");
+        toast.error("Something went wrong. Please try again.");
+        console.error("Formspree error:", response.status, response.statusText);
       }
     } catch (error) {
       console.error("Form submission error:", error);
-      alert("Something went wrong. Please try again.");
+      toast.error("Something went wrong. Please try again.");
     }
   };
 
@@ -105,7 +121,8 @@ export default function WaitlistSection() {
   }, [priorityOpen]);
 
   return (
-    <section
+    <>
+      <section
       id="waitlist"
       className="mt-16 hl-section-divider scroll-mt-24 py-10"
     >
@@ -380,5 +397,7 @@ export default function WaitlistSection() {
         </div>
       </div>
     </section>
+    <Toaster position="bottom-center" />
+    </>
   );
 }
