@@ -76,7 +76,7 @@ export default function HeroSection({ onOpenDemo }) {
           <button
             type="button"
             onClick={onOpenDemo}
-            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-300 px-4 py-2 text-sm font-medium hl-body hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-900"
+            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-300 px-5 py-2.5 text-sm font-medium hl-body transition hover:bg-emerald-50 hover:border-emerald-400 dark:border-slate-700 dark:hover:bg-emerald-950/30 dark:hover:border-emerald-600"
           >
             <Play className="h-4 w-4" />
             <span>Try the demo</span>
