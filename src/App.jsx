@@ -28,6 +28,7 @@ import RideChat from "./pages/demo/RideChat";
 
 // Landing page
 import LandingPage from "./pages/landingpage/LandingPage";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 
 export default function App() {
   const location = useLocation();
@@ -44,6 +45,7 @@ export default function App() {
       <Routes>
         {/* Public marketing site */}
         <Route path="/" element={<LandingPage />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
 
         {/* Demo application (shell + navbar + footer etc.) */}
         <Route path="/demo" element={<RootLayout />}>
