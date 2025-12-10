@@ -14,15 +14,7 @@ export default function WaitlistSection() {
   const [consentChecked, setConsentChecked] = useState(false);
   const priorityRef = useRef(null);
 
-  const isFormValid =
-    email.trim() &&
-    route.trim() &&
-    source &&
-    (source !== "other" || sourceDetail.trim()) &&
-    priority.length > 0 &&
-    consentChecked;
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Validate and show specific error messages
@@ -51,37 +43,54 @@ export default function WaitlistSection() {
       return;
     }
 
-    const formData = new FormData(e.currentTarget);
-    const payload = Object.fromEntries(formData.entries());
+    const payload = {
+      email: email.trim(),
+      route: route.trim(),
+      role: role,
+      source: source,
+      priority: priority.join(", "),
+      marketingConsent: consentChecked,
+    };
 
-    payload.email = email.trim();
-    payload.route = route.trim();
-    payload.role = role;
-    payload.source = source;
-    payload.priority = priority;
-    payload.marketingConsent = consentChecked;
-
-    if (source !== "other") {
-      delete payload.sourceDetail;
-    } else {
+    if (source === "other") {
       payload.sourceDetail = sourceDetail;
     }
 
     console.log("Waitlist signup:", payload);
 
-    // Track the waitlist signup in Google Analytics
-    trackWaitlistSignup(source, role);
+    try {
+      // Send to Formspree
+      const formData = new FormData();
+      Object.entries(payload).forEach(([key, value]) => {
+        formData.append(key, value);
+      });
 
-    setSubmitted(true);
-    setEmail("");
-    setRoute("");
-    setRole("rider");
-    setSource("");
-    setSourceDetail("");
-    setPriority([]);
-    setPriorityOpen(false);
-    setConsentChecked(false);
-    e.currentTarget.reset();
+      const response = await fetch("https://formspree.io/f/mwpgrqpa", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        // Track the waitlist signup in Google Analytics
+        trackWaitlistSignup(source, role);
+
+        setSubmitted(true);
+        setEmail("");
+        setRoute("");
+        setRole("rider");
+        setSource("");
+        setSourceDetail("");
+        setPriority([]);
+        setPriorityOpen(false);
+        setConsentChecked(false);
+        e.currentTarget.reset();
+      } else {
+        alert("Something went wrong. Please try again.");
+      }
+    } catch (error) {
+      console.error("Form submission error:", error);
+      alert("Something went wrong. Please try again.");
+    }
   };
 
   useEffect(() => {
