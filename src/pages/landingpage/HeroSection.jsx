@@ -3,7 +3,7 @@ import { ArrowRight, ShieldCheck, Users, MapPin, Play } from "lucide-react";
 const heroStats = [
   { label: "Purpose", value: "Safe intercity travel" },
   { label: "Region", value: "Eastern Europe" },
-  { label: "Focus", value: "Trust & reliability" },
+  { label: "Focus", value: "Trust, safety & reliability" },
 ];
 
 const valueProps = [
@@ -59,7 +59,7 @@ export default function HeroSection({ onOpenDemo }) {
         </p>
 
         <p className="mt-3 max-w-xl text-xs hl-muted sm:text-sm">
-          Join the early access list and we&apos;ll notify you as soon as we
+          Join the early access list and we'll notify you as soon as we
           launch in your area.
         </p>
 
