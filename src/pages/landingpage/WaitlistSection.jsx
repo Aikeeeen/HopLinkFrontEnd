@@ -5,6 +5,8 @@ import confetti from "canvas-confetti";
 import { trackWaitlistSignup } from "../../lib/tracking";
 
 export default function WaitlistSection() {
+  const useMockSubmission = import.meta.env.DEV && import.meta.env.VITE_FORMSPREE_MOCK === "true";
+
   const [submitted, setSubmitted] = useState(false);
   const [email, setEmail] = useState("");
   const [route, setRoute] = useState("");
@@ -60,6 +62,27 @@ export default function WaitlistSection() {
 
     console.log("Waitlist signup:", payload);
 
+    // In dev with VITE_FORMSPREE_MOCK=true, skip hitting Formspree tokens
+    if (useMockSubmission) {
+      toast.success("(Mock) You're on the list! Check your email for updates.");
+      confetti({
+        particleCount: 80,
+        spread: 60,
+        origin: { y: 0.6 },
+      });
+      setSubmitted(true);
+      setEmail("");
+      setRoute("");
+      setRole("rider");
+      setSource("");
+      setSourceDetail("");
+      setPriority([]);
+      setPriorityOpen(false);
+      setConsentChecked(false);
+      e.currentTarget.reset();
+      return;
+    }
+
     try {
       // Send to Formspree
       const formData = new FormData();
@@ -71,18 +94,22 @@ export default function WaitlistSection() {
         method: "POST",
         body: formData,
         headers: {
-          "Accept": "application/json",
+          Accept: "application/json",
         },
       });
 
-      if (response.ok) {
-        // Track the waitlist signup in Google Analytics
-        trackWaitlistSignup(source, role);
+      const data = await response.json().catch(() => null);
 
-        // Show success toast
+      if (response.ok) {
+        // Track the waitlist signup in Google Analytics (ignore tracking errors)
+        try {
+          trackWaitlistSignup(source, role);
+        } catch (err) {
+          console.warn("Tracking failed", err);
+        }
+
         toast.success("🎉 You're on the list! Check your email for updates.");
 
-        // Trigger confetti
         confetti({
           particleCount: 100,
           spread: 70,
@@ -100,8 +127,9 @@ export default function WaitlistSection() {
         setConsentChecked(false);
         e.currentTarget.reset();
       } else {
-        toast.error("Something went wrong. Please try again.");
-        console.error("Formspree error:", response.status, response.statusText);
+        const message = data?.errors?.[0]?.message || "Something went wrong. Please try again.";
+        toast.error(message);
+        console.error("Formspree error:", response.status, response.statusText, data);
       }
     } catch (error) {
       console.error("Form submission error:", error);
@@ -397,7 +425,7 @@ export default function WaitlistSection() {
         </div>
       </div>
     </section>
-    <Toaster position="bottom-center" />
+    <Toaster position="top-center" />
     </>
   );
 }
