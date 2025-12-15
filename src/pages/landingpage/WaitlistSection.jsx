@@ -1,8 +1,12 @@
 import { Mail, User, MapPin } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { Toaster, toast } from "react-hot-toast";
+import confetti from "canvas-confetti";
 import { trackWaitlistSignup } from "../../lib/tracking";
 
 export default function WaitlistSection() {
+  const useMockSubmission = import.meta.env.DEV && import.meta.env.VITE_FORMSPREE_MOCK === "true";
+
   const [submitted, setSubmitted] = useState(false);
   const [email, setEmail] = useState("");
   const [route, setRoute] = useState("");
@@ -14,74 +18,123 @@ export default function WaitlistSection() {
   const [consentChecked, setConsentChecked] = useState(false);
   const priorityRef = useRef(null);
 
-  const isFormValid =
-    email.trim() &&
-    route.trim() &&
-    source &&
-    (source !== "other" || sourceDetail.trim()) &&
-    priority.length > 0 &&
-    consentChecked;
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Validate and show specific error messages
     if (!email.trim()) {
-      alert("Please enter your email address.");
+      toast.error("Please enter your email address.");
       return;
     }
     if (!route.trim()) {
-      alert("Please enter your typical city or route.");
+      toast.error("Please enter your typical city or route.");
       return;
     }
     if (!source) {
-      alert("Please select how you heard about us.");
+      toast.error("Please select how you heard about us.");
       return;
     }
     if (source === "other" && !sourceDetail.trim()) {
-      alert("Please tell us where you heard about us.");
+      toast.error("Please tell us where you heard about us.");
       return;
     }
     if (priority.length === 0) {
-      alert("Please select at least one thing that matters most to you.");
+      toast.error("Please select at least one thing that matters most to you.");
       return;
     }
     if (!consentChecked) {
-      alert("Please agree to receive emails to join the early access list.");
+      toast.error("Please agree to receive emails to join the early access list.");
       return;
     }
 
-    const formData = new FormData(e.currentTarget);
-    const payload = Object.fromEntries(formData.entries());
+    const payload = {
+      email: email.trim(),
+      route: route.trim(),
+      role: role,
+      source: source,
+      priority: priority.join(", "),
+      marketingConsent: consentChecked,
+    };
 
-    payload.email = email.trim();
-    payload.route = route.trim();
-    payload.role = role;
-    payload.source = source;
-    payload.priority = priority;
-    payload.marketingConsent = consentChecked;
-
-    if (source !== "other") {
-      delete payload.sourceDetail;
-    } else {
+    if (source === "other") {
       payload.sourceDetail = sourceDetail;
     }
 
     console.log("Waitlist signup:", payload);
 
-    // Track the waitlist signup in Google Analytics
-    trackWaitlistSignup(source, role);
+    // In dev with VITE_FORMSPREE_MOCK=true, skip hitting Formspree tokens
+    if (useMockSubmission) {
+      toast.success("(Mock) You're on the list! Check your email for updates.");
+      confetti({
+        particleCount: 80,
+        spread: 60,
+        origin: { y: 0.6 },
+      });
+      setSubmitted(true);
+      setEmail("");
+      setRoute("");
+      setRole("rider");
+      setSource("");
+      setSourceDetail("");
+      setPriority([]);
+      setPriorityOpen(false);
+      setConsentChecked(false);
+      e.currentTarget.reset();
+      return;
+    }
 
-    setSubmitted(true);
-    setEmail("");
-    setRoute("");
-    setRole("rider");
-    setSource("");
-    setSourceDetail("");
-    setPriority([]);
-    setPriorityOpen(false);
-    setConsentChecked(false);
-    e.currentTarget.reset();
+    try {
+      // Send to Formspree
+      const formData = new FormData();
+      Object.entries(payload).forEach(([key, value]) => {
+        formData.append(key, value);
+      });
+
+      const response = await fetch("https://formspree.io/f/mwpgrqpa", {
+        method: "POST",
+        body: formData,
+        headers: {
+          Accept: "application/json",
+        },
+      });
+
+      const data = await response.json().catch(() => null);
+
+      if (response.ok) {
+        // Track the waitlist signup in Google Analytics (ignore tracking errors)
+        try {
+          trackWaitlistSignup(source, role);
+        } catch (err) {
+          console.warn("Tracking failed", err);
+        }
+
+        toast.success("🎉 You're on the list! Check your email for updates.");
+
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 },
+        });
+
+        setSubmitted(true);
+        setEmail("");
+        setRoute("");
+        setRole("rider");
+        setSource("");
+        setSourceDetail("");
+        setPriority([]);
+        setPriorityOpen(false);
+        setConsentChecked(false);
+        e.currentTarget.reset();
+      } else {
+        const message = data?.errors?.[0]?.message || "Something went wrong. Please try again.";
+        toast.error(message);
+        console.error("Formspree error:", response.status, response.statusText, data);
+      }
+    } catch (error) {
+      console.error("Form submission error:", error);
+      toast.error("Something went wrong. Please try again.");
+    }
   };
 
   useEffect(() => {
@@ -96,7 +149,8 @@ export default function WaitlistSection() {
   }, [priorityOpen]);
 
   return (
-    <section
+    <>
+      <section
       id="waitlist"
       className="mt-16 hl-section-divider scroll-mt-24 py-10"
     >
@@ -371,5 +425,7 @@ export default function WaitlistSection() {
         </div>
       </div>
     </section>
+    <Toaster position="top-center" />
+    </>
   );
 }

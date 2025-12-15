@@ -3,7 +3,7 @@ import { ArrowRight, ShieldCheck, Users, MapPin, Play } from "lucide-react";
 const heroStats = [
   { label: "Purpose", value: "Safe intercity travel" },
   { label: "Region", value: "Eastern Europe" },
-  { label: "Focus", value: "Trust & reliability" },
+  { label: "Focus", value: "Trust, safety & reliability" },
 ];
 
 const valueProps = [
@@ -27,7 +27,7 @@ const valueProps = [
   },
 ];
 
-export default function HeroSection({ onOpenDemo }) {
+export default function HeroSection() {
   const handleScrollToWaitlist = () => {
     const el = document.getElementById("waitlist");
     if (el) {
@@ -59,7 +59,7 @@ export default function HeroSection({ onOpenDemo }) {
         </p>
 
         <p className="mt-3 max-w-xl text-xs hl-muted sm:text-sm">
-          Join the early access list and we&apos;ll notify you as soon as we
+          Join the early access list and we'll notify you as soon as we
           launch in your area.
         </p>
 
@@ -73,14 +73,15 @@ export default function HeroSection({ onOpenDemo }) {
             <ArrowRight className="h-4 w-4" />
           </button>
 
-          <button
-            type="button"
-            onClick={onOpenDemo}
-            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-300 px-4 py-2 text-sm font-medium hl-body hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-900"
+          <a
+            href="/demo"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-300 px-5 py-2.5 text-sm font-medium hl-body transition hover:bg-emerald-50 hover:border-emerald-400 dark:border-slate-700 dark:hover:bg-emerald-950/30 dark:hover:border-emerald-600"
           >
             <Play className="h-4 w-4" />
             <span>Try the demo</span>
-          </button>
+          </a>
 
           <p className="max-w-xs text-xs hl-muted">
             Not a money-making platform, just a safe way to find reliable people

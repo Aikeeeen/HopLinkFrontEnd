@@ -5,19 +5,19 @@ const testimonials = [
     name: "Mila K.",
     role: "Student, travels between cities",
     quote:
-      "I used to spend hours scrolling Facebook groups. With HopLink, I just search, filter, and book a ride that feels safe.",
+      "I spend hours scrolling Facebook groups now. With HopLink, I'll be able to search, filter, and book a ride that feels safe.",
   },
   {
     name: "Daniel R.",
     role: "Driver with a long commute",
     quote:
-      "Sharing my usual route helps cover fuel and I get fewer no-shows because everything is confirmed in the app.",
+      "I'd love a way to share my usual route and cover fuel costs without the risk of no-shows. HopLink sounds like it will solve that.",
   },
   {
     name: "Jess & Marco",
     role: "Travelers in Eastern Europe",
     quote:
-      "Having reviews and clear rules makes carpooling feel like a real option, not a gamble.",
+      "Carpooling with reviews and clear rules would make it feel like a real option, not a gamble.",
   },
 ];
 
@@ -25,7 +25,7 @@ export default function SocialProofSection() {
   return (
     <section className="mt-16">
       <h2 className="text-2xl font-semibold tracking-tight hl-heading sm:text-3xl">
-        People already planning shared trips
+        Why people are excited for HopLink
       </h2>
 
       <div className="mt-6 grid gap-4 md:grid-cols-3">

@@ -69,7 +69,7 @@ export default function CookieConsent() {
 
             <p className="mt-3 text-xs hl-muted">
               By accepting, you agree to our use of cookies for analytics. Essential cookies are always active. Learn more in our{" "}
-              <a href="#" className="underline hover:text-indigo-600 dark:hover:text-indigo-400">
+              <a href="/privacy" className="underline hover:text-indigo-600 dark:hover:text-indigo-400">
                 Privacy Policy
               </a>.
             </p>
