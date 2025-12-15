@@ -15,13 +15,13 @@ export default function Navbar() {
               {/* Mobile brand text instead of logo */}
               <span className="md:hidden text-lg font-semibold hl-heading tracking-tight">
                 Hop
-                <span className="text-indigo-600">Link</span>
+                <span className="text-emerald-600">Link</span>
               </span>
 
               {/* Desktop brand (unchanged) */}
               <span className="hidden md:inline text-xl font-semibold hl-heading tracking-tight">
                 HopLink
-                <span className="text-indigo-600">Carpooling</span>
+                <span className="text-emerald-600">Carpooling</span>
               </span>
             </NavLink>
 

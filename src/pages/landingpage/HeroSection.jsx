@@ -63,11 +63,11 @@ export default function HeroSection() {
           launch in your area.
         </p>
 
-        <div className="mt-6 flex flex-col gap-3">
+        <div className="mt-8 flex flex-col gap-3">
           <button
             type="button"
             onClick={handleScrollToWaitlist}
-            className="hl-btn-primary inline-flex items-center justify-center gap-2 rounded-2xl bg-emerald-500 px-5 py-2.5 text-sm font-medium text-slate-950 shadow-lg shadow-emerald-500/30 transition hover:bg-emerald-400"
+            className="hl-btn-primary inline-flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-emerald-500 to-teal-500 px-6 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-emerald-500/40 transition hover:from-emerald-400 hover:to-teal-400 hover:shadow-lg hover:shadow-emerald-500/50"
           >
             <span>Join early access</span>
             <ArrowRight className="h-4 w-4" />
@@ -77,7 +77,7 @@ export default function HeroSection() {
             href="/demo"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-300 px-5 py-2.5 text-sm font-medium hl-body transition hover:bg-emerald-50 hover:border-emerald-400 dark:border-slate-700 dark:hover:bg-emerald-950/30 dark:hover:border-emerald-600"
+            className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-emerald-500/30 bg-emerald-500/5 px-6 py-3 text-sm font-semibold text-emerald-600 dark:text-emerald-300 transition hover:bg-emerald-500/10 hover:border-emerald-500/50 dark:border-emerald-500/20 dark:hover:bg-emerald-950/50 dark:hover:border-emerald-500/40"
           >
             <Play className="h-4 w-4" />
             <span>Try the demo</span>
@@ -104,11 +104,27 @@ export default function HeroSection() {
         </dl>
       </div>
 
-      {/* Right: value cards */}
+      {/* Right: Visual hero element + value cards */}
       <div className="w-full max-w-sm space-y-4">
+        {/* Hero visual card */}
+        <div className="relative overflow-hidden rounded-2xl bg-linear-to-br from-emerald-500/20 to-teal-500/10 dark:from-emerald-500/10 dark:to-teal-500/5 border border-emerald-200/50 dark:border-slate-700 p-8 min-h-64 flex flex-col items-center justify-center">
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute top-0 right-0 h-48 w-48 rounded-full bg-emerald-400/20 blur-3xl dark:bg-emerald-500/10"></div>
+            <div className="absolute -bottom-20 -left-20 h-48 w-48 rounded-full bg-teal-400/20 blur-3xl dark:bg-teal-500/5"></div>
+          </div>
+          <div className="relative text-center">
+            <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-100 dark:bg-emerald-500/20 mb-4">
+              <MapPin className="h-8 w-8 text-emerald-600 dark:text-emerald-300" />
+            </div>
+            <p className="text-sm font-semibold hl-heading">Verify & match</p>
+            <p className="mt-1 text-xs hl-muted">Connect with trusted travelers on your route</p>
+          </div>
+        </div>
+
+        {/* Value cards */}
         {valueProps.map((item) => (
-          <div key={item.title} className="hl-card flex gap-3 px-4 py-3">
-            <div className="mt-1 flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-500/15">
+          <div key={item.title} className="hl-card flex gap-3 px-4 py-3 hover:shadow-md transition">
+            <div className="mt-1 flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-500/15 shrink-0">
               <item.icon className="h-4 w-4 text-emerald-600 dark:text-emerald-300" />
             </div>
             <div>

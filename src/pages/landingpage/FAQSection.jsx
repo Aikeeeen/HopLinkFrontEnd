@@ -1,4 +1,4 @@
-import { HelpCircle } from "lucide-react";
+import { HelpCircle, MessageCircle } from "lucide-react";
 
 const faqs = [
   {
@@ -25,32 +25,45 @@ const faqs = [
 
 export default function FAQSection() {
   return (
-    <section className="mt-16 hl-section-divider py-10">
-      <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-        <div className="max-w-sm">
-          <h2 className="text-2xl font-semibold tracking-tight hl-heading sm:text-3xl">
-            Questions, answered
+    <section className="mt-8">
+      <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:gap-16">
+        <div className="max-w-sm shrink-0">
+          <h2 className="text-3xl font-bold tracking-tight hl-heading sm:text-4xl">
+            Questions,
+            <span className="block text-purple-600 dark:text-purple-400 mt-1">
+              answered
+            </span>
           </h2>
-          <p className="mt-3 text-sm hl-body sm:text-base">
+          <p className="mt-5 text-base hl-body sm:text-lg leading-relaxed">
             HopLink is still in development, but here's what we can already
             share about how it will work.
           </p>
-          <div className="mt-4 flex items-center gap-2 text-xs hl-muted">
-            <HelpCircle className="h-4 w-4" />
-            <span>
+          <div className="mt-6 flex items-start gap-3 rounded-xl bg-purple-100/50 dark:bg-purple-500/10 p-3">
+            <MessageCircle className="h-5 w-5 shrink-0 text-purple-600 dark:text-purple-400 mt-0.5" />
+            <span className="text-sm hl-body">
               Have a different question? You'll be able to reach us
               directly from the app once it launches.
             </span>
           </div>
         </div>
 
-        <dl className="mt-2 flex-1 space-y-4">
-          {faqs.map((item) => (
-            <div key={item.question} className="hl-card px-4 py-3">
-              <dt className="text-sm font-semibold hl-heading">
-                {item.question}
-              </dt>
-              <dd className="mt-1.5 text-sm hl-body">{item.answer}</dd>
+        <dl className="flex-1 space-y-4">
+          {faqs.map((item, index) => (
+            <div
+              key={item.question}
+              className="group overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700 transition hover:border-slate-300 dark:hover:border-slate-600 bg-white dark:bg-slate-900"
+            >
+              <div className="px-6 py-4">
+                <dt className="text-base font-semibold hl-heading flex items-start gap-3">
+                  <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-purple-100 dark:bg-purple-500/20 text-xs font-medium text-purple-700 dark:text-purple-300 shrink-0 mt-0.5">
+                    {index + 1}
+                  </span>
+                  {item.question}
+                </dt>
+                <dd className="mt-3 text-sm hl-body ml-9 leading-relaxed">
+                  {item.answer}
+                </dd>
+              </div>
             </div>
           ))}
         </dl>
