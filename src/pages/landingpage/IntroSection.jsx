@@ -54,18 +54,18 @@ export default function IntroSection() {
 
         <ul className="mt-7 grid gap-4 text-sm">
           <li className="flex items-start gap-3 group">
-            <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition" />
-            <span className="hl-body">Perfect for one-off trips and recurring intercity routes.</span>
+            <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition" />
+            <span className="hl-body leading-6">Perfect for one-off trips and recurring intercity routes.</span>
           </li>
 
           <li className="flex items-start gap-3 group">
-            <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition" />
-            <span className="hl-body">Clear details and expectations, no messy DM negotiations.</span>
+            <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition" />
+            <span className="hl-body leading-6">Clear details and expectations, no messy DM negotiations.</span>
           </li>
 
           <li className="flex items-start gap-3 group">
-            <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition" />
-            <span className="hl-body">Verification, reliability scores, and reviews to build trust.</span>
+            <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition" />
+            <span className="hl-body leading-6">Verification, reliability scores, and reviews to build trust.</span>
           </li>
         </ul>
       </div>

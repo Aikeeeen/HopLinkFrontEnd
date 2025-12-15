@@ -6,6 +6,7 @@ import HeadlineStrip from "./HeadlineStrip";
 import IntroSection from "./IntroSection";
 import ProcessSection from "./ProcessSection";
 import ValuePropositionSection from "./ValuePropositionSection";
+import TrustBadgesSection from "./TrustBadgesSection";
 import SocialProofSection from "./SocialProofSection";
 import FAQSection from "./FAQSection";
 import FinalCTA from "./FinalCTA";
@@ -82,6 +83,13 @@ export default function LandingPage() {
       </section>
 
       {/* Social Proof - Emerald tint background */}
+        {/* Trust Badges Section - White background */}
+        <section className="bg-white dark:bg-slate-950">
+          <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+            <TrustBadgesSection />
+          </div>
+        </section>
+
       <section className="bg-emerald-50/40 dark:bg-slate-900/30">
         <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
           <SocialProofSection />

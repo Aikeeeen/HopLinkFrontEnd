@@ -51,16 +51,8 @@ export default function HeroSection() {
           </span>
         </h1>
 
-        <p className="mt-4 max-w-xl text-sm hl-body sm:text-base">
-          HopLink connects drivers and passengers traveling the same route.
-          Drivers can ask for a fair share of fuel costs, but the platform does
-          not enable monetization. No gig drivers. No commercial incentives.
-          Just trustworthy, verified travel between cities.
-        </p>
-
-        <p className="mt-3 max-w-xl text-xs hl-muted sm:text-sm">
-          Join the early access list and we'll notify you as soon as we
-          launch in your area.
+        <p className="mt-5 max-w-xl text-lg hl-body font-medium">
+          No gig drivers. No commercialization. Just verified people, fair costs, and trust.
         </p>
 
         <div className="mt-8 flex flex-col gap-3">
@@ -82,11 +74,6 @@ export default function HeroSection() {
             <Play className="h-4 w-4" />
             <span>Try the demo</span>
           </a>
-
-          <p className="max-w-xs text-xs hl-muted">
-            Not a money-making platform, just a safe way to find reliable people
-            going the same way.
-          </p>
         </div>
 
         {/* Stats */}
@@ -104,23 +91,8 @@ export default function HeroSection() {
         </dl>
       </div>
 
-      {/* Right: Visual hero element + value cards */}
+      {/* Right: Value cards */}
       <div className="w-full max-w-sm space-y-4">
-        {/* Hero visual card */}
-        <div className="relative overflow-hidden rounded-2xl bg-linear-to-br from-emerald-500/20 to-teal-500/10 dark:from-emerald-500/10 dark:to-teal-500/5 border border-emerald-200/50 dark:border-slate-700 p-8 min-h-64 flex flex-col items-center justify-center">
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute top-0 right-0 h-48 w-48 rounded-full bg-emerald-400/20 blur-3xl dark:bg-emerald-500/10"></div>
-            <div className="absolute -bottom-20 -left-20 h-48 w-48 rounded-full bg-teal-400/20 blur-3xl dark:bg-teal-500/5"></div>
-          </div>
-          <div className="relative text-center">
-            <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-100 dark:bg-emerald-500/20 mb-4">
-              <MapPin className="h-8 w-8 text-emerald-600 dark:text-emerald-300" />
-            </div>
-            <p className="text-sm font-semibold hl-heading">Verify & match</p>
-            <p className="mt-1 text-xs hl-muted">Connect with trusted travelers on your route</p>
-          </div>
-        </div>
-
         {/* Value cards */}
         {valueProps.map((item) => (
           <div key={item.title} className="hl-card flex gap-3 px-4 py-3 hover:shadow-md transition">

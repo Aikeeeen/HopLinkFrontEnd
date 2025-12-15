@@ -40,22 +40,18 @@ export default function ProcessSection() {
             <div key={step.number} className="relative">
               {/* Connector line (hide on mobile, show between cards on desktop) */}
               {idx < steps.length - 1 && (
-                <div className="hidden md:block absolute top-20 left-[60%] w-[120%] h-0.5 bg-emerald-200 dark:bg-emerald-500/20"></div>
+                <div className="hidden md:block absolute top-12 left-[60%] w-[120%] h-0.5 bg-emerald-200 dark:bg-emerald-500/20"></div>
               )}
 
               <div className="relative bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 hover:shadow-lg transition">
-                {/* Step number circle */}
-                <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-500/20 text-base font-bold text-emerald-700 dark:text-emerald-300 mb-4">
-                  {step.number}
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-500/20 text-base font-bold text-emerald-700 dark:text-emerald-300">
+                    {step.number}
+                  </div>
+                  <h3 className="text-lg font-semibold hl-heading">{step.title}</h3>
                 </div>
 
-                {/* Icon */}
-                <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100/50 dark:bg-emerald-500/10 mb-4 ml-2">
-                  <Icon className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
-                </div>
-
-                <h3 className="text-lg font-semibold hl-heading mt-4">{step.title}</h3>
-                <p className="mt-2 text-sm hl-body leading-relaxed">{step.description}</p>
+                <p className="text-sm hl-body leading-relaxed">{step.description}</p>
               </div>
             </div>
           );
