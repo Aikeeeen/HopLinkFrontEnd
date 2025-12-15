@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { trackEvent } from "../../lib/tracking";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -36,6 +37,7 @@ export default function Login() {
             try {
               setErr("");
               await login({ email, password });
+              trackEvent('demo_login', 'engagement', 'successful_login');
               navigate(redirectTo, { replace: true });
             } catch (e) {
               setErr(e.message || "Login failed");

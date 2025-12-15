@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { trackEvent } from "../../lib/tracking";
 
 export default function Register() {
   const [showPw, setShowPw] = useState(false);
@@ -40,6 +41,7 @@ export default function Register() {
             try {
               setErr("");
               await register({ name, email, role, password });
+              trackEvent('demo_register', 'engagement', `role_${role}`);
               navigate("/demo");
             } catch (e) {
               setErr(e.message || "Registration failed");
