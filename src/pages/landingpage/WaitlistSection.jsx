@@ -9,7 +9,8 @@ export default function WaitlistSection() {
 
   const [submitted, setSubmitted] = useState(false);
   const [email, setEmail] = useState("");
-  const [route, setRoute] = useState("");
+  const [fromLocation, setFromLocation] = useState("");
+  const [toLocation, setToLocation] = useState("");
   const [role, setRole] = useState("rider");
   const [source, setSource] = useState("");
   const [sourceDetail, setSourceDetail] = useState("");
@@ -26,8 +27,12 @@ export default function WaitlistSection() {
       toast.error("Please enter your email address.");
       return;
     }
-    if (!route.trim()) {
-      toast.error("Please enter your typical city or route.");
+    if (!fromLocation.trim()) {
+      toast.error("Please enter your starting location.");
+      return;
+    }
+    if (!toLocation.trim()) {
+      toast.error("Please enter your destination.");
       return;
     }
     if (!source) {
@@ -49,7 +54,8 @@ export default function WaitlistSection() {
 
     const payload = {
       email: email.trim(),
-      route: route.trim(),
+      fromLocation: fromLocation.trim(),
+      toLocation: toLocation.trim(),
       role: role,
       source: source,
       priority: priority.join(", "),
@@ -72,7 +78,8 @@ export default function WaitlistSection() {
       });
       setSubmitted(true);
       setEmail("");
-      setRoute("");
+      setFromLocation("");
+      setToLocation("");
       setRole("rider");
       setSource("");
       setSourceDetail("");
@@ -118,7 +125,8 @@ export default function WaitlistSection() {
 
         setSubmitted(true);
         setEmail("");
-        setRoute("");
+        setFromLocation("");
+        setToLocation("");
         setRole("rider");
         setSource("");
         setSourceDetail("");
@@ -206,58 +214,70 @@ export default function WaitlistSection() {
                 </div>
               </div>
 
-              <div className="grid gap-3 sm:grid-cols-2 sm:items-start">
-                <div className="space-y-2 text-sm">
-                  <label className="block text-xs font-medium hl-muted uppercase tracking-wide">
-                    I&apos;m mainly a…
-                  </label>
-                  <div className="flex gap-2">
-                    <label className="flex-1 cursor-pointer">
-                      <input
-                        type="radio"
-                        name="role"
-                        value="rider"
-                        checked={role === "rider"}
-                        onChange={() => setRole("rider")}
-                        className="peer hidden"
-                      />
-                      <div className="flex min-h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-center hl-body peer-checked:border-emerald-500 peer-checked:bg-emerald-50 dark:border-slate-700 dark:bg-slate-900 dark:peer-checked:border-emerald-500 dark:peer-checked:bg-emerald-500/10">
-                        Passenger
-                      </div>
-                    </label>
-                    <label className="flex-1 cursor-pointer">
-                      <input
-                        type="radio"
-                        name="role"
-                        value="driver"
-                        checked={role === "driver"}
-                        onChange={() => setRole("driver")}
-                        className="peer hidden"
-                      />
-                      <div className="flex min-h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-center hl-body peer-checked:border-emerald-500 peer-checked:bg-emerald-50 dark:border-slate-700 dark:bg-slate-900 dark:peer-checked:border-emerald-500 dark:peer-checked:bg-emerald-500/10">
-                        Driver
-                      </div>
-                    </label>
-                  </div>
-                </div>
-
-                <div className="space-y-2 text-sm">
-                  <label
-                    htmlFor="route"
-                    className="block text-xs font-medium hl-muted uppercase tracking-wide"
-                  >
-                    Typical city or route
-                  </label>
-                  <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 min-h-11 dark:border-slate-700 dark:bg-slate-900">
-                    <MapPin className="h-4 w-4 text-slate-400" />
+              <div className="space-y-2 text-sm">
+                <label className="block text-xs font-medium hl-muted uppercase tracking-wide">
+                  I&apos;m mainly a…
+                </label>
+                <div className="flex gap-2">
+                  <label className="flex-1 cursor-pointer">
                     <input
-                      id="route"
-                      name="route"
+                      type="radio"
+                      name="role"
+                      value="rider"
+                      checked={role === "rider"}
+                      onChange={() => setRole("rider")}
+                      className="peer hidden"
+                    />
+                    <div className="flex min-h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-center hl-body peer-checked:border-emerald-500 peer-checked:bg-emerald-50 dark:border-slate-700 dark:bg-slate-900 dark:peer-checked:border-emerald-500 dark:peer-checked:bg-emerald-500/10">
+                      Passenger
+                    </div>
+                  </label>
+                  <label className="flex-1 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="role"
+                      value="driver"
+                      checked={role === "driver"}
+                      onChange={() => setRole("driver")}
+                      className="peer hidden"
+                    />
+                    <div className="flex min-h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-center hl-body peer-checked:border-emerald-500 peer-checked:bg-emerald-50 dark:border-slate-700 dark:bg-slate-900 dark:peer-checked:border-emerald-500 dark:peer-checked:bg-emerald-500/10">
+                      Driver
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <div className="space-y-1.5 text-sm">
+                <label className="block text-xs font-medium hl-muted uppercase tracking-wide">
+                  Your typical route
+                </label>
+                <p className="text-xs hl-muted mb-2">I travel regularly from and to (standard commute)</p>
+                <div className="grid gap-3 grid-cols-2">
+                  <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 min-h-11 dark:border-slate-700 dark:bg-slate-900">
+                    <MapPin className="h-4 w-4 text-slate-400 shrink-0" />
+                    <input
+                      id="from"
+                      name="from"
                       type="text"
-                      placeholder="e.g. Sofia → Bucharest"
+                      placeholder="From (e.g. Sofia)"
                       required
-                      value={route}
-                      onChange={(e) => setRoute(e.target.value)}
+                      value={fromLocation}
+                      onChange={(e) => setFromLocation(e.target.value)}
+                      className="w-full bg-transparent text-sm outline-none hl-body placeholder:text-slate-400"
+                    />
+                  </div>
+
+                  <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 min-h-11 dark:border-slate-700 dark:bg-slate-900">
+                    <MapPin className="h-4 w-4 text-slate-400 shrink-0" />
+                    <input
+                      id="to"
+                      name="to"
+                      type="text"
+                      placeholder="To (e.g. Bucharest)"
+                      required
+                      value={toLocation}
+                      onChange={(e) => setToLocation(e.target.value)}
                       className="w-full bg-transparent text-sm outline-none hl-body placeholder:text-slate-400"
                     />
                   </div>
